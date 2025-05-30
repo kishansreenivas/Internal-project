@@ -1,0 +1,59 @@
+package com.NotificationService.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotificationServiceImpl //implements NotificationService {
+
+    @Autowired
+    private NotificationRepository repository;
+
+    @Autowired
+    private EmailSender emailSender;
+
+    @Autowired
+    private SmsSender smsSender;
+
+    @Override
+    public NotificationResponseDTO sendNotification(NotificationRequestDTO request) {
+        Notification notification = mapToEntity(request);
+        notification.setStatus(NotificationStatus.PENDING);
+        notification.setCreatedAt(LocalDateTime.now());
+        repository.save(notification);
+
+        try {
+            if (request.getType() == NotificationType.EMAIL) {
+                emailSender.sendEmail(request.getRecipient(), request.getSubject(), request.getContent());
+            } else {
+                smsSender.sendSms(request.getRecipient(), request.getContent());
+            }
+            notification.setStatus(NotificationStatus.SENT);
+            notification.setSentAt(LocalDateTime.now());
+        } catch (Exception ex) {
+            notification.setStatus(NotificationStatus.FAILED);
+        }
+
+        repository.save(notification);
+        return mapToResponse(notification);
+    }
+
+    // ✅ Mapping DTO to Entity
+    private Notification mapToEntity(NotificationRequestDTO dto) {
+        Notification notification = new Notification();
+        notification.setUserId(dto.getUserId());
+        notification.setRecipient(dto.getRecipient());
+        notification.setSubject(dto.getSubject());
+        notification.setContent(dto.getContent());
+        notification.setType(dto.getType());
+        return notification;
+    }
+
+    // ✅ Mapping Entity to DTO
+    private NotificationResponseDTO mapToResponse(Notification notification) {
+        NotificationResponseDTO response = new NotificationResponseDTO();
+        response.setId(notification.getId());
+        response.setStatus(notification.getStatus());
+        response.setMessage("Notification processing complete with status: " + notification.getStatus());
+        return response;
+    }
+}

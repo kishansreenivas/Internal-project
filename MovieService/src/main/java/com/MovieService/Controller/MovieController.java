@@ -1,0 +1,59 @@
+package com.MovieService.Controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.MovieService.Entity.Movie;
+import com.MovieService.Services.MovieService;
+
+
+@RestController
+//@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/movies")
+public class MovieController {
+	@Autowired
+    private  MovieService movieService;
+    public MovieController(MovieService movieService) {
+        this.movieService = movieService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Movie> create(@RequestBody Movie movie) {
+        return ResponseEntity.ok(movieService.createMovie(movie));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Movie>> getAll() {
+        return ResponseEntity.ok(movieService.getAllMovies());
+    }
+
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Movie> getById(@PathVariable Long id) {
+    	Movie movie = movieService.getMovieById(id); // Will throw if not found
+        return ResponseEntity.ok(movie);
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Movie> update(@PathVariable Long id, @RequestBody Movie movie) {
+        return ResponseEntity.ok(movieService.updateMovie(id, movie));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        movieService.deleteMovie(id);
+        return ResponseEntity.noContent().build();
+    }
+}

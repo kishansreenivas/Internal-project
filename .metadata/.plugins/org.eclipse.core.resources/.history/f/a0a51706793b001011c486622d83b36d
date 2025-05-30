@@ -1,0 +1,6 @@
+package com.PaymentService.dto;
+
+public class RefundResponseDTO {
+    private String refundTransactionId;
+    private String status;
+}

@@ -1,0 +1,24 @@
+server:
+  port: 9992
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    debug: true
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/userservice
+    username: root
+    password: sumit
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  application:
+    name: UserService
+eureka:
+  client:
+    fetch-registry: true
+instance:
+    prefer-ip-address: true
+    register-with-eureka: true
+    service-url:
+      defaultzone:  http://localhost:8761/eureka

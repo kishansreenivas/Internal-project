@@ -1,0 +1,12 @@
+package com.NotificationService.dto;
+
+import com.NotificationService.enums.NotificationType;
+
+public class NotificationRequestDTO {
+    private Long userId;
+    private String recipient;
+    private String subject;
+    private String content;
+    private NotificationType type;
+}
+

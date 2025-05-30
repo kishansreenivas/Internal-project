@@ -1,0 +1,24 @@
+package com.PaymentService.Controller;
+
+@RestController
+@RequestMapping("/api/payments")
+public class PaymentController {
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @PostMapping("/initiate")
+    public ResponseEntity<PaymentResponseDTO> initiatePayment(@RequestBody PaymentRequestDTO request) {
+        return ResponseEntity.ok(paymentService.initiatePayment(request));
+    }
+
+    @PostMapping("/refund")
+    public ResponseEntity<RefundResponseDTO> processRefund(@RequestBody RefundRequestDTO request) {
+        return ResponseEntity.ok(paymentService.processRefund(request));
+    }
+
+    @GetMapping("/status/{transactionId}")
+    public ResponseEntity<PaymentTransaction> getStatus(@PathVariable String transactionId) {
+        return ResponseEntity.ok(paymentService.getPaymentStatus(transactionId));
+    }
+}

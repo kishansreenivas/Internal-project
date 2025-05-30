@@ -1,0 +1,5 @@
+package com.PaymentService.Repository;
+
+public interface PaymentTransactionRepository extends JpaRepository<PaymentTransaction, Long> {
+    Optional<PaymentTransaction> findByTransactionId(String transactionId);
+}

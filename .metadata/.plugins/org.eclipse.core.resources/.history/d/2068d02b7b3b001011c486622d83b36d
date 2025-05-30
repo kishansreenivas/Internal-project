@@ -1,0 +1,39 @@
+package com.PaymentService.Controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.PaymentService.Service.PaymentService;
+import com.PaymentService.dto.PaymentRequestDTO;
+import com.PaymentService.dto.PaymentResponseDTO;
+import com.PaymentService.dto.RefundResponseDTO;
+import com.PaymentService.entity.PaymentTransaction;
+
+@RestController
+@RequestMapping("/api/payments")
+public class PaymentController {
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @PostMapping("/initiate")
+    public ResponseEntity<PaymentResponseDTO> initiatePayment(@RequestBody PaymentRequestDTO request) {
+        return ResponseEntity.ok(paymentService.initiatePayment(request));
+    }
+
+    @PostMapping("/refund")
+    public ResponseEntity<RefundResponseDTO> processRefund(@RequestBody RefundRequestDTO request) {
+        return ResponseEntity.ok(paymentService.processRefund(request));
+    }
+
+    @GetMapping("/status/{transactionId}")
+    public ResponseEntity<PaymentTransaction> getStatus(@PathVariable String transactionId) {
+        return ResponseEntity.ok(paymentService.getPaymentStatus(transactionId));
+    }
+}

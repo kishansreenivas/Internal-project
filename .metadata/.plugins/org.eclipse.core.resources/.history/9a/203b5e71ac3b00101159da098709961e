@@ -1,0 +1,33 @@
+package com.NotificationService.entity;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+
+@Entity
+public class Notification {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Long userId;
+    private String recipient; // email or phone
+    private String subject;
+    @Lob
+    private String content;
+
+    @Enumerated(EnumType.STRING)
+    private NotificationType type; // EMAIL or SMS
+
+    @Enumerated(EnumType.STRING)
+    private NotificationStatus status; // PENDING, SENT, FAILED
+
+    private LocalDateTime createdAt;
+    private LocalDateTime sentAt;
+}

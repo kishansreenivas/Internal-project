@@ -1,0 +1,25 @@
+package com.PaymentService.entity;
+
+import jakarta.persistence.Entity;
+
+@Entity
+public class PaymentTransaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String bookingId;
+    private String userId;
+
+    private BigDecimal amount;
+    private String currency;
+
+    private String paymentStatus; // INITIATED, SUCCESS, FAILED, REFUNDED
+    private String paymentMethod; // CARD, UPI, NETBANKING
+
+    private String transactionId; // From payment gateway
+    private String gatewayResponse;
+
+    private LocalDateTime initiatedAt;
+    private LocalDateTime completedAt;
+}

@@ -1,0 +1,11 @@
+package com.PaymentService.dto;
+
+import java.math.BigDecimal;
+
+public class PaymentRequestDTO {
+    private String bookingId;
+    private String userId;
+    private BigDecimal amount;
+    private String currency;
+    private String paymentMethod;
+}

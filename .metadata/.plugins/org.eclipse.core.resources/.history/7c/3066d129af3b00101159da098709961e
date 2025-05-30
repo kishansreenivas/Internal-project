@@ -1,0 +1,9 @@
+package com.NotificationService.dto;
+
+import com.NotificationService.enums.NotificationStatus;
+
+public class NotificationResponseDTO {
+    private Long id;
+    private NotificationStatus status;
+    private String message;
+}
