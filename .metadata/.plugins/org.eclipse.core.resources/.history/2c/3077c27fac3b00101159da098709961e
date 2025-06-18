@@ -1,7 +1,0 @@
-package com.NotificationService.dto;
-
-public class NotificationResponseDTO {
-    private Long id;
-    private NotificationStatus status;
-    private String message;
-}

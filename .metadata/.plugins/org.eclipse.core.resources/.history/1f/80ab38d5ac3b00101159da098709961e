@@ -1,5 +1,0 @@
-package com.NotificationService.sender;
-
-public interface NotificationService {
-    NotificationResponseDTO sendNotification(NotificationRequestDTO request);
-}

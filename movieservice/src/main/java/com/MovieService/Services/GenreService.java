@@ -1,0 +1,55 @@
+package com.MovieService.Services;
+
+import java.util.List;
+
+import org.hibernate.service.spi.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.MovieService.Entity.Genre;
+import com.MovieService.Exception.ResourceNotFoundException;
+import com.MovieService.Repository.GenreRepository;
+
+@Service
+public class GenreService {
+		@Autowired
+    private final MovieService movieService;
+	@Autowired
+    private final GenreRepository genreRepository;
+    public GenreService(GenreRepository genreRepository, MovieService movieService) {
+        this.genreRepository = genreRepository;
+        this.movieService = movieService;
+    }
+
+    public Genre createGenre(Genre genre) {
+    	try {
+    		 return genreRepository.save(genre);
+		} catch (Exception e) {
+			throw new ServiceException("Error creating Genre", e);
+		}
+
+    }
+
+    public List<Genre> getAllGenres() {
+    	try {
+    		 return genreRepository.findAll();
+		} catch (Exception e) {
+			throw new ServiceException("Error retriving  getAllGenres");
+		}
+
+    }
+
+    public Genre getGenreById(String id) {
+
+    		return genreRepository.findById(id)
+    				.orElseThrow(() -> new ResourceNotFoundException("Movie not found with ID: " + id)) ;
+		    }
+
+    public void deleteGenre(String id) {
+
+    if (!genreRepository.existsById(id)) {
+        throw new ResourceNotFoundException("Movie not found with ID: " + id);
+    }
+    genreRepository.deleteById(id);
+    }
+}

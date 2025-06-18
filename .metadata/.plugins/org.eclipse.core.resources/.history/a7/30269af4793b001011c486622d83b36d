@@ -1,7 +1,0 @@
-package com.PaymentService.Service;
-
-public interface PaymentService {
-    PaymentResponseDTO initiatePayment(PaymentRequestDTO request);
-    RefundResponseDTO processRefund(RefundRequestDTO request);
-    PaymentTransaction getPaymentStatus(String transactionId);
-}

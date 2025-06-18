@@ -1,6 +1,0 @@
-package com.PaymentService.dto;
-
-public class RefundRequestDTO {
-    private String transactionId;
-    private String reason;
-}

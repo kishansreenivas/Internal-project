@@ -1,9 +1,0 @@
-package com.PaymentService.dto;
-
-public class PaymentRequestDTO {
-    private String bookingId;
-    private String userId;
-    private BigDecimal amount;
-    private String currency;
-    private String paymentMethod;
-}

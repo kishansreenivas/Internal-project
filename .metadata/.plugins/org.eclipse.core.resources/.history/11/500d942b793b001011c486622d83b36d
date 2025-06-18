@@ -1,7 +1,0 @@
-package com.PaymentService.dto;
-
-public class PaymentResponseDTO {
-    private String transactionId;
-    private String status;
-    private String message;
-}
