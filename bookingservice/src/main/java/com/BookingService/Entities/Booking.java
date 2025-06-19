@@ -28,7 +28,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 public class Booking {
-	 @Id
+	
+	@Id
     @GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private String bookingId;
@@ -43,5 +44,20 @@ public class Booking {
     private BookingStatus  status;
     @JsonBackReference
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
-    private List<BookedSeat> seats = new ArrayList<>(); // ✅ OneToMany is correct
+    private List<BookedSeat> seats = new ArrayList<>();
+
+    public Booking(String bookingId, String userId, String showId, String screenId,
+            LocalDateTime bookingTime, BookingStatus status, String paymentId,
+            double totalAmount, List<BookedSeat> seats) {
+ this.bookingId = bookingId;
+ this.userId = userId;
+ this.showId = showId;
+ this.screenId = screenId;
+ this.bookingTime = bookingTime;
+ this.status = status;
+ this.paymentId = paymentId;
+ this.totalAmount = totalAmount;
+ this.seats = seats;
+}
+
 }

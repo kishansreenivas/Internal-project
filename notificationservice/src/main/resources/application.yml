@@ -13,7 +13,7 @@ spring:
     password: sumit
     driver-class-name: com.mysql.cj.jdbc.Driver
   application:
-    name: NotificationService
+    name: NOTIFICATION-SERVICE
 eureka:
   client:
     fetch-registry: true

@@ -4,48 +4,44 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.MovieService.Entity.Genre;
-import com.MovieService.Services.GenreService;
-
+import com.MovieService.dto.ApiResponse;
+import com.MovieService.service.impl.GenreServiceImpl;
 
 @RestController
-@RequestMapping("/genres")
+@RequestMapping("/v1/genres")
 public class GenreController {
-	@Autowired
-    private  GenreService genreService;
-    public GenreController(GenreService genreService) {
+
+    @Autowired
+    private GenreServiceImpl genreService;
+
+    public GenreController(GenreServiceImpl genreService) {
         this.genreService = genreService;
     }
 
     @PostMapping
-    public ResponseEntity<Genre> create(@RequestBody Genre genre) {
-        return ResponseEntity.ok(genreService.createGenre(genre));
+    public ResponseEntity<ApiResponse<Genre>> create(@RequestBody Genre genre) {
+        Genre createdGenre = genreService.createGenre(genre);
+        return ResponseEntity.ok(new ApiResponse<>(true, createdGenre));
     }
 
     @GetMapping
-    public ResponseEntity<List<Genre>> getAll() {
-        return ResponseEntity.ok(genreService.getAllGenres());
+    public ResponseEntity<ApiResponse<List<Genre>>> getAll() {
+        List<Genre> genres = genreService.getAllGenres();
+        return ResponseEntity.ok(new ApiResponse<>(true, genres));
     }
-
 
     @GetMapping("/{id}")
-    public ResponseEntity<Genre> getById(@PathVariable String id) {
-        Genre genre = genreService.getGenreById(id); // Will throw if not found
-        return ResponseEntity.ok(genre);
+    public ResponseEntity<ApiResponse<Genre>> getById(@PathVariable String id) {
+        Genre genre = genreService.getGenreById(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, genre));
     }
 
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable String id) {
         genreService.deleteGenre(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ApiResponse<>(true, null));
     }
 }

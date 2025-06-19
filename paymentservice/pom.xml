@@ -47,7 +47,11 @@
         <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
        
-       
+       <dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+</dependency>
+
     <!-- Spring Boot Starter Data JPA (Database ORM) -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -64,11 +68,14 @@
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
     </dependency>
   
-    <!-- Validation (for DTOs) -->
-    <dependency>
-        <groupId>jakarta.validation</groupId>
-        <artifactId>jakarta.validation-api</artifactId>
-    </dependency>
+ <dependency>
+    <groupId>jakarta.validation</groupId>
+    <artifactId>jakarta.validation-api</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+</dependency>
 
     <!-- Jackson for JSON (comes with Web starter, but explicit is okay) -->
     <dependency>

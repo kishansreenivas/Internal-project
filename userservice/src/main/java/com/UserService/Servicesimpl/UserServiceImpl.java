@@ -11,6 +11,7 @@ import com.UserService.Services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,26 +22,40 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
-
+	@Autowired
     private final UserRepository userRepo;
+	@Autowired
     private final UserMapper mapper;
+	@Autowired
     private final BookingServiceClient bookingServiceClient;
 
-    @Override
-    public UserDTO createUser(UserDTO dto) {
-        log.info("ENTRY: createUser() - DTO: {}", dto);
+	@Override
+	public UserDTO createUser(UserDTO dto) {
+	    log.info("ENTRY: createUser() - DTO: {}", dto);
 
-        User user = mapper.toEntity(dto);
-        if (user.getId() == null) {
-            user.setId(UUID.randomUUID());
-        }
+	    // Manual null check (if needed, depending on validation at controller)
+	    if (dto == null) {
+	        log.warn("UserDTO is null");
+	        throw new IllegalArgumentException("User data cannot be null");
+	    }
 
-        User saved = userRepo.save(user);
-        UserDTO result = mapper.toDTO(saved);
+	    // Map DTO to entity
+	    User user = mapper.toEntity(dto);
 
-        log.info("EXIT: createUser() - Saved User: {}", result);
-        return result;
-    }
+	    // Ensure ID is set
+	    if (user.getId() == null) {
+	        user.setId(UUID.randomUUID());
+	    }
+
+	    // Save to DB
+	    User saved = userRepo.save(user);
+
+	    // Map back to DTO
+	    UserDTO result = mapper.toDTO(saved);
+
+	    log.info("EXIT: createUser() - Saved User: {}", result);
+	    return result;
+	}
 
     @Override
     public UserDTO updateUser(UUID id, UserDTO dto) {

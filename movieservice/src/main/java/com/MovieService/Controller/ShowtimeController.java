@@ -8,18 +8,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.MovieService.Entity.Showtime;
-import com.MovieService.Services.ShowtimeService;
 import com.MovieService.dto.ApiResponse;
 import com.MovieService.dto.ShowtimeRequestDto;
+import com.MovieService.service.impl.ShowtimeServiceImpl;
 
 @RestController
 @RequestMapping("/v1/showtimes")
 public class ShowtimeController {
 
     @Autowired
-    private ShowtimeService showtimeService;
+    private ShowtimeServiceImpl showtimeService;
 
-    public ShowtimeController(ShowtimeService showtimeService) {
+    public ShowtimeController(ShowtimeServiceImpl showtimeService) {
         this.showtimeService = showtimeService;
     }
 

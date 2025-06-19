@@ -8,15 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.MovieService.Entity.Movie;
-import com.MovieService.Services.MovieService;
 import com.MovieService.dto.ApiResponse;
+import com.MovieService.service.impl.MovieServiceImpl;
 
 @RestController
 @RequestMapping("/v1/movies")
 public class MovieController {
 
     @Autowired
-    private MovieService movieService;
+    private MovieServiceImpl movieService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<Movie>> create(@RequestBody Movie movie) {

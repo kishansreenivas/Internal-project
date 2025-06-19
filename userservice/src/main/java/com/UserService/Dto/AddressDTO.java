@@ -2,6 +2,8 @@ package com.UserService.Dto;
 
 import java.util.UUID;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +19,18 @@ import lombok.Setter;
 @Data
 public class AddressDTO {
     private UUID id;
+    @NotBlank(message = "Street is required")
     private String street;
+
+    @NotBlank(message = "City is required")
     private String city;
+
+    @NotBlank(message = "State is required")
     private String state;
+
+    @NotBlank(message = "Postal code is required")
+    @Pattern(regexp = "^[0-9]{5,6}$", message = "Postal code must be 5 or 6 digits")
     private String postalCode;
-    
  
     private UUID userId;
   

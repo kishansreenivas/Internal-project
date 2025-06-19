@@ -2,6 +2,8 @@ package com.MovieService.dto;
 
 import com.MovieService.Entity.Theatre;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +11,12 @@ import lombok.Setter;
 @Data
 @Setter
 @Getter
-
 public class ScreenResponseDto {
     private String id;
+
+    @NotBlank(message = "Screen name is required")
     private String name;
-    private Theatre theatre; // or a TheatreDto if you want to limit fields
+
+    @NotNull(message = "Theatre is required")
+    private Theatre theatre; 
 }

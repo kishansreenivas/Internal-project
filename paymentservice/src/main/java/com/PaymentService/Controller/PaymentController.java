@@ -1,12 +1,12 @@
 package com.PaymentService.Controller;
 
-
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -14,6 +14,9 @@ import com.PaymentService.Service.PaymentService;
 import com.PaymentService.dto.*;
 import com.PaymentService.entity.PaymentTransaction;
 
+import jakarta.validation.Valid;
+
+@Validated
 @RestController
 @RequestMapping("/v1/payments")
 public class PaymentController {
@@ -22,13 +25,13 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/initiate")
-    public ResponseEntity<ApiResponse<PaymentResponseDTO>> initiatePayment(@RequestBody PaymentRequestDTO request) {
+    public ResponseEntity<ApiResponse<PaymentResponseDTO>> initiatePayment(@Valid @RequestBody PaymentRequestDTO request) {
         PaymentResponseDTO response = paymentService.initiatePayment(request);
         return ResponseEntity.ok(new ApiResponse<>(true, response));
     }
 
     @PostMapping("/refund")
-    public ResponseEntity<ApiResponse<RefundResponseDTO>> processRefund(@RequestBody RefundRequestDTO request) {
+    public ResponseEntity<ApiResponse<RefundResponseDTO>> processRefund(@Valid @RequestBody RefundRequestDTO request) {
         RefundResponseDTO response = paymentService.processRefund(request);
         return ResponseEntity.ok(new ApiResponse<>(true, response));
     }

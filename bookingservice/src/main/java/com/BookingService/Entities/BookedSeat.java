@@ -28,10 +28,11 @@ import lombok.Setter;
 
 @Entity
 public class BookedSeat {
-	 @Id
-	    @GeneratedValue(generator = "UUID")
-	    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	    private String id;
+	
+    @Id
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	private String id;
     private String seatId;
     private String screenId;
     @Column(name = "`column`")
@@ -49,5 +50,12 @@ public class BookedSeat {
     @JsonBackReference
     private Booking booking;  // ✅ ManyToOne - Each seat belongs to one Booking
 
-    // Getters and Setters
+    public BookedSeat(String seatId, String screenId, BookingStatus status, LocalDateTime lockedAt, Booking booking) {
+        this.seatId = seatId;
+        this.screenId = screenId;
+        this.status = status;
+        this.lockedAt = lockedAt;
+        this.booking = booking;
+    }
+
 }

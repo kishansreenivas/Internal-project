@@ -12,16 +12,16 @@ import com.MovieService.Entity.Screen;
 import com.MovieService.Entity.Theatre;
 import com.MovieService.Repository.ScreenRepository;
 import com.MovieService.Repository.TheatreRepository;
-import com.MovieService.Services.ScreenService;
 import com.MovieService.dto.ApiResponse;
 import com.MovieService.dto.ScreenRequestDto;
+import com.MovieService.service.impl.ScreenServiceImpl;
 
 @RestController
 @RequestMapping("/v1/screens")
 public class ScreenController {
 
     @Autowired
-    private ScreenService screenService;
+    private ScreenServiceImpl screenService;
 
     @Autowired
     private ScreenRepository screenRepository;
@@ -29,7 +29,7 @@ public class ScreenController {
     @Autowired
     private TheatreRepository theatreRepository;
 
-    public ScreenController(ScreenService screenService) {
+    public ScreenController(ScreenServiceImpl screenService) {
         this.screenService = screenService;
     }
 

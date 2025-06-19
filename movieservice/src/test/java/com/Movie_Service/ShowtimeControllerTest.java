@@ -17,7 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.MovieService.Entity.Showtime;
-import com.MovieService.Services.ShowtimeService;
+import com.MovieService.service.impl.ShowtimeServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -27,7 +27,7 @@ public class ShowtimeControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ShowtimeService showtimeService;
+    private ShowtimeServiceImpl showtimeService;
 
     @Test
     public void testGetAllShowtimes() throws Exception {

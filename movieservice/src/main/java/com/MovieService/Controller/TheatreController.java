@@ -5,25 +5,32 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.MovieService.Entity.Theatre;
 import com.MovieService.Services.TheatreService;
 import com.MovieService.dto.ApiResponse;
+import com.MovieService.service.impl.TheatreServiceImpl;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Validated
 @RestController
 @RequestMapping("/v1/theatres")
 public class TheatreController {
 
     @Autowired
-    private TheatreService theatreService;
+    private TheatreServiceImpl theatreService;
 
-    public TheatreController(TheatreService theatreService) {
+    public TheatreController(TheatreServiceImpl theatreService) {
         this.theatreService = theatreService;
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> create(@RequestBody Theatre theatre) {
+    public ResponseEntity<ApiResponse<?>> create(@Valid @RequestBody Theatre theatre) {
         try {
             Theatre created = theatreService.createTheatre(theatre);
             return ResponseEntity.ok(new ApiResponse<>(true, created));

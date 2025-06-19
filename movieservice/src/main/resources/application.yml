@@ -13,7 +13,7 @@ spring:
     password: sumit
     driver-class-name: com.mysql.cj.jdbc.Driver
   application:
-    name: Movie-Service
+    name: MOVIE-SERVICE
 eureka:
   client:
     fetch-registry: true

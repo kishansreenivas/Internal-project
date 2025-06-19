@@ -1,0 +1,45 @@
+server:
+  port: 9998
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      routes:
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/v1/users/**,/v1/addresses/**,/v1/payment-methods/**,/v1/preferences/**
+
+        - id: PAYMENT-SERVICE
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+          - Path=/v1/payments/**
+
+        - id: BOOKING-SERVICE
+          uri: lb://BOOKING-SERVICE
+          predicates:
+          - Path=/v1/bookings/**
+
+        - id: MOVIE-SERVICE
+          uri: lb://MOVIE-SERVICE
+          predicates:
+          - Path=/v1/genres/**,/v1/movies/**,/v1/screens/**,/v1/showtimes/**,/v1/theatres/*
+
+        - id: NOTIFICATION-SERVICE
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+          - Path=/v1/notifications/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+

@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.MovieService.Entity.Movie;
 import com.MovieService.EnumType.MovieStatus;
-import com.MovieService.Services.MovieService;
+import com.MovieService.service.impl.MovieServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,7 +28,7 @@ public class MovieControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MovieService movieService;
+    private MovieServiceImpl movieService;
 
     @Test
     public void testGetAllMovies() throws Exception {

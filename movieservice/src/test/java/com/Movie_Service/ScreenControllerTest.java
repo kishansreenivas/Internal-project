@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.MovieService.Entity.Screen;
 import com.MovieService.Entity.Theatre;
-import com.MovieService.Services.ScreenService;
+import com.MovieService.service.impl.ScreenServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,7 +26,7 @@ public class ScreenControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ScreenService screenService;
+    private ScreenServiceImpl screenService;
 
     @Test
     public void testGetAllScreens() throws Exception {

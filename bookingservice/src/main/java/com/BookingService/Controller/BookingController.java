@@ -1,94 +1,149 @@
 package com.BookingService.Controller;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.BookingService.Dto.BookingRequest;
 import com.BookingService.Dto.BookingWithSeatsDTO;
 import com.BookingService.Dto.UserDto;
 import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
-import com.BookingService.Service.BookingService;
 
+import com.BookingService.Service.BookingService;
+import com.BookingService.payload.ApiResponse;
+
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Validated
 @RestController
 @RequestMapping("/v1/bookings")
 public class BookingController {
-    @Autowired 
+
+    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
+
+    @Autowired
     private BookingService bookingService;
- 
+
     @PostMapping("/initiate")
-    public ResponseEntity<Booking> initiateBooking(@RequestBody BookingRequest request) {
-        Booking booking = bookingService.initiateBooking(
-            request.getUserId(),
-            request.getShowId(),
-            request.getScreenId(),
-            request.getSeatIds(),
-            request.getTotalAmount()
-        );
-        return ResponseEntity.ok(booking);
+    public ResponseEntity<ApiResponse<Booking>> initiateBooking(@Valid @RequestBody BookingRequest request) {
+        try {
+            log.info("Initiating booking for userId={}, showId={}, screenId={}", request.getUserId(), request.getShowId(), request.getScreenId());
+            Booking booking = bookingService.initiateBooking(
+                    request.getUserId(),
+                    request.getShowId(),
+                    request.getScreenId(),
+                    request.getSeatIds(),
+                    request.getTotalAmount()
+            );
+            return ResponseEntity.ok(ApiResponse.success("Booking initiated successfully", booking));
+        } catch (Exception e) {
+            log.error("Failed to initiate booking", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to initiate booking: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/confirm/{bookingId}")
-    public Booking confirm(@PathVariable String bookingId, @RequestParam String paymentId) {
-        return bookingService.confirmBooking(bookingId, paymentId);
+    public ResponseEntity<ApiResponse<Booking>> confirm(@Valid @PathVariable String bookingId, @RequestParam String paymentId) {
+        try {
+            log.info("Confirming bookingId={} with paymentId={}", bookingId, paymentId);
+            Booking confirmed = bookingService.confirmBooking(bookingId, paymentId);
+            return ResponseEntity.ok(ApiResponse.success("Booking confirmed", confirmed));
+        } catch (Exception e) {
+            log.error("Booking confirmation failed", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Booking confirmation failed: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/cancel/{bookingId}")
-    public Booking cancel(@PathVariable String bookingId) {
-        return bookingService.cancelBooking(bookingId);
+    public ResponseEntity<ApiResponse<Booking>> cancel(@Valid @PathVariable String bookingId) {
+        try {
+            log.info("Cancelling bookingId={}", bookingId);
+            Booking cancelled = bookingService.cancelBooking(bookingId);
+            return ResponseEntity.ok(ApiResponse.success("Booking cancelled", cancelled));
+        } catch (Exception e) {
+            log.error("Failed to cancel booking", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to cancel booking: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/seats/{bookingId}")
-    public List<BookedSeat> getSeatsForBooking(@PathVariable String bookingId) {
-        return bookingService.getSeatsByBookingId(bookingId);
+    public ResponseEntity<ApiResponse<List<BookedSeat>>> getSeatsForBooking(@PathVariable String bookingId) {
+        try {
+            List<BookedSeat> seats = bookingService.getSeatsByBookingId(bookingId);
+            return ResponseEntity.ok(ApiResponse.success("Fetched seats", seats));
+        } catch (Exception e) {
+            log.error("Failed to get seats", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to get seats: " + e.getMessage()));
+        }
     }
-    
 
-    // Return user details only
     @GetMapping("/user/profile/{userId}")
-    public UserDto fetchUserProfile(@PathVariable UUID userId) {
-        return bookingService.getUserDetails(userId);
+    public ResponseEntity<ApiResponse<UserDto>> fetchUserProfile(@PathVariable UUID userId) {
+        try {
+            UserDto user = bookingService.getUserDetails(userId);
+            return ResponseEntity.ok(ApiResponse.success("User profile fetched", user));
+        } catch (Exception e) {
+            log.error("Failed to fetch user profile", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to fetch user: " + e.getMessage()));
+        }
     }
-
 
     @GetMapping("/user/{userId}")
-    public List<Booking> getBookingsByUser(@PathVariable String userId) {
-        return bookingService.getBookingsByUserId(userId);
+    public ResponseEntity<ApiResponse<List<Booking>>> getBookingsByUser(@PathVariable String userId) {
+        try {
+            List<Booking> bookings = bookingService.getBookingsByUserId(userId);
+            return ResponseEntity.ok(ApiResponse.success("User bookings fetched", bookings));
+        } catch (Exception e) {
+            log.error("Failed to get bookings by user", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to get bookings: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/users/{userId}")
-    public UserDto getUserWithBookings(@PathVariable UUID userId) {
-        UserDto user = bookingService.getUserDetails(userId);
-        List<Booking> bookings = bookingService.getBookingsByUserId(userId.toString());
+    public ResponseEntity<ApiResponse<UserDto>> getUserWithBookings(@PathVariable UUID userId) {
+        try {
+            UserDto user = bookingService.getUserDetails(userId);
+            List<Booking> bookings = bookingService.getBookingsByUserId(userId.toString());
 
-        // Check if bookingService.getBookingsByUserId is working
-        List<Long> bookingIds = bookings.stream()
-                .map(b -> Long.valueOf(b.getBookingId().hashCode())) // ⚠️ This is suspicious!
-                .collect(Collectors.toList());
+            List<Long> bookingIds = bookings.stream()
+                    .map(b -> Long.valueOf(b.getBookingId().hashCode())) // ⚠️ Consider using UUIDs instead
+                    .collect(Collectors.toList());
 
-        user.setBookingIds(bookingIds);
-        return user;
+            user.setBookingIds(bookingIds);
+            return ResponseEntity.ok(ApiResponse.success("User and bookings fetched", user));
+        } catch (Exception e) {
+            log.error("Failed to get user with bookings", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to fetch user/bookings: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/seats")
-    public List<BookedSeat> getAllBookedSeats() {
-        return bookingService.getAllBookedSeats();
-    }
-    
-    @GetMapping("/All-with-seats")
-    public List<BookingWithSeatsDTO> getAllBookingsWithSeats() {
-        return bookingService.getAllBookingsWithSeats();
+    public ResponseEntity<ApiResponse<List<BookedSeat>>> getAllBookedSeats() {
+        try {
+            List<BookedSeat> seats = bookingService.getAllBookedSeats();
+            return ResponseEntity.ok(ApiResponse.success("All booked seats fetched", seats));
+        } catch (Exception e) {
+            log.error("Failed to get all booked seats", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to get booked seats: " + e.getMessage()));
+        }
     }
 
+    @GetMapping("/All-with-seats")
+    public ResponseEntity<ApiResponse<List<BookingWithSeatsDTO>>> getAllBookingsWithSeats() {
+        try {
+            List<BookingWithSeatsDTO> bookings = bookingService.getAllBookingsWithSeats();
+            return ResponseEntity.ok(ApiResponse.success("Bookings with seats fetched", bookings));
+        } catch (Exception e) {
+            log.error("Failed to get all bookings with seats", e);
+            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to fetch bookings: " + e.getMessage()));
+        }
+    }
 }

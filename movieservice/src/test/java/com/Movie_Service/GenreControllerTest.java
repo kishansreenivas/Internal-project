@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.MovieService.Entity.Genre;
-import com.MovieService.Services.GenreService;
+import com.MovieService.service.impl.GenreServiceImpl;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,7 +26,7 @@ public class GenreControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private GenreService genreService;
+    private GenreServiceImpl genreService;
 
     @Test
     public void testGetAllGenres() throws Exception {

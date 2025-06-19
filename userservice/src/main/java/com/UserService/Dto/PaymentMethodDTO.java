@@ -2,6 +2,8 @@ package com.UserService.Dto;
 
 import java.util.UUID;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +19,19 @@ import lombok.Setter;
 @Data
 public class PaymentMethodDTO {
 	private UUID id;
-    private String cardNumber;
-    private String cardHolder;
-    private String expiry;
-    private String type;
+	  @NotBlank(message = "Card number is required")
+	    @Pattern(regexp = "^\\d{13,19}$", message = "Card number must be 13 to 19 digits")
+	    private String cardNumber;
+
+	    @NotBlank(message = "Card holder name is required")
+	    private String cardHolder;
+
+	    @NotBlank(message = "Expiry date is required")
+	    @Pattern(regexp = "^(0[1-9]|1[0-2])\\/\\d{2}$", message = "Expiry must be in MM/YY format")
+	    private String expiry;
+
+	    @NotBlank(message = "Payment type is required")
+	    private String type;
+
     private UUID userId;
 }
