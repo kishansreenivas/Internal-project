@@ -1,3 +1,19 @@
+spring:
+  datasource:
+    username: root
+    password: sumit
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 60000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    debug: true
+    show-sql: true
+
 eureka:
   client:
     fetch-registry: true
