@@ -6,3 +6,16 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     instance:
       prefer-ip-address: true
+
+#Actuator properties for health 
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
