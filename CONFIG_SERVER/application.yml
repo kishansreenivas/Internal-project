@@ -7,3 +7,21 @@ eureka:
     instance:
       prefer-ip-address: true
 
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+#    instances:
+#      fallbackGetAllUsers: # This is a method for dummy if user does not get a rating info
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+      instances:
+      USER_SERVICE_CB:
+      baseConfig: default
