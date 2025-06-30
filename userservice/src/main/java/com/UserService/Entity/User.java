@@ -1,12 +1,12 @@
 package com.UserService.Entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.hibernate.annotations.GenericGenerator;
-
 import com.UserService.Enum.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,7 +15,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -31,7 +30,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable{
 	@Id
 	@GeneratedValue(generator = "UUID")
 	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
@@ -41,24 +40,32 @@ public class User {
     private String lastName;
     private String email;
     private String phone;
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses = new ArrayList<>();  // ✅ OneToMany
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Preferences preferences;  // ✅ OneToOne
+    private List<Address> addresses = new ArrayList<>();  
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();  // ✅ OneToMany
+    private List<PaymentMethod> paymentMethods = new ArrayList<>();  
 
 
     @ElementCollection
-    private List<Long> watchlistMovieIds = new ArrayList<>();
+    private List<String> watchlistMovieIds = new ArrayList<>();
 
     @ElementCollection
     private List<Long> bookingId = new ArrayList<>();
+    
+    //UserCodeGenerator
+//    @Column(unique = true)
+//    private String userCode;
+//    
+//    @PrePersist
+//    public void prePersist() {
+//        if (this.userCode == null && !this.addresses.isEmpty()) {
+//            this.userCode = UserCodeGenerator.generateUserCode("dev", this.addresses.get(0));
+//        }}
 }

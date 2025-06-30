@@ -8,9 +8,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Slf4j
 @Service
@@ -18,6 +20,7 @@ import java.util.List;
 public class TheatreServiceImpl implements TheatreService {
 
     private final TheatreRepository theatreRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Theatre createTheatre(Theatre theatre) {
@@ -66,11 +69,7 @@ public class TheatreServiceImpl implements TheatreService {
                     return new EntityNotFoundException("Theatre not found");
                 });
 
-        theatre.setName(updated.getName());
-        theatre.setAddress(updated.getAddress());
-        theatre.setCity(updated.getCity());
-        theatre.setState(updated.getState());
-        theatre.setPincode(updated.getPincode());
+        modelMapper.map(updated, theatre); // Maps non-null fields
 
         Theatre saved = theatreRepository.save(theatre);
         log.info("EXIT: updateTheatre() updated data: {}", saved);

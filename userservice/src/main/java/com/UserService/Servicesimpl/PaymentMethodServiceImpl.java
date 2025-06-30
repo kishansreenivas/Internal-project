@@ -1,5 +1,11 @@
 package com.UserService.Servicesimpl;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.UserService.Dto.PaymentMethodDTO;
 import com.UserService.Entity.PaymentMethod;
 import com.UserService.Entity.User;
@@ -10,12 +16,6 @@ import com.UserService.Services.PaymentMethodService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

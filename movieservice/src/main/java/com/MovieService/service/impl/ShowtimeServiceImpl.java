@@ -11,11 +11,11 @@ import com.MovieService.Repository.ShowtimeRepository;
 import com.MovieService.Repository.TheatreRepository;
 import com.MovieService.Services.ShowtimeService;
 import com.MovieService.dto.ShowtimeRequestDto;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +29,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
     private final MovieRepository movieRepository;
     private final TheatreRepository theatreRepository;
     private final ScreenRepository screenRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Showtime createShowtime(ShowtimeRequestDto dto) {
@@ -57,13 +58,10 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                     return new ResourceNotFoundException("Screen not found");
                 });
 
-        Showtime showtime = new Showtime();
+        Showtime showtime = modelMapper.map(dto, Showtime.class);
         showtime.setMovie(movie);
         showtime.setTheatre(theatre);
         showtime.setScreen(screen);
-        showtime.setShowStart(dto.getShowStart());
-        showtime.setShowEnd(dto.getShowEnd());
-        showtime.setLanguage(dto.getLanguage());
 
         Showtime saved = showtimeRepository.save(showtime);
         log.info("EXIT: createShowtime() created showtime: {}", saved);
@@ -105,12 +103,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                     return new EntityNotFoundException("Showtime not found");
                 });
 
-        showtime.setMovie(updated.getMovie());
-        showtime.setTheatre(updated.getTheatre());
-        showtime.setScreen(updated.getScreen());
-        showtime.setShowStart(updated.getShowStart());
-        showtime.setShowEnd(updated.getShowEnd());
-        showtime.setLanguage(updated.getLanguage());
+        modelMapper.map(updated, showtime);
 
         Showtime saved = showtimeRepository.save(showtime);
         log.info("EXIT: updateShowtime() updated showtime: {}", saved);

@@ -24,7 +24,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(false, message, null);
     }
 
-    // Getters and Setters
+   
     public boolean isSuccess() { return success; }
     public void setSuccess(boolean success) { this.success = success; }
     public String getMessage() { return message; }

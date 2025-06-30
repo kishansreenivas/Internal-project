@@ -33,7 +33,7 @@ public class BookingServiceImpl implements BookingService {
     @Autowired private ApplicationEventPublisher pub;
 
     public BookingServiceImpl() {
-        log.info("🚀 BookingServiceImpl instantiated");
+        log.info(" BookingServiceImpl instantiated");
     }
 
     @Override

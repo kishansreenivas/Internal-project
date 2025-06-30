@@ -1,37 +1,33 @@
 server:
   port: 9991
-
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    debug: true
-    show-sql: true
+  application:
+    name: USER-SERVICE
   datasource:
-    url: jdbc:mysql://localhost:3306/userservice
+    url: jdbc:mysql://localhost:3306/userservice?useSSL=false&serverTimezone=UTC 
     username: root
     password: sumit
     driver-class-name: com.mysql.cj.jdbc.Driver
-  application:
-    name: USER-SERVICE
-  # Optional: HikariCP settings for production database connections
-datasource:
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
       idle-timeout: 30000
       max-lifetime: 60000
+  jpa: 
+    hibernate: 
+      ddl-auto: update
+    debug: true
+    show-sql: true
 
-eureka:
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    instance:
-      prefer-ip-address: true
+  config: 
+    import: optional:configserver:http://localhost:9997  #Eureka is there in the config server
+  cache:
+    type: redis       # Redis  for storing cache 
+    redis:
+      host: 127.0.0.1
+      port: 6379
 
-# Optional: Enable Feign timeout configuration
+
 feign:
   client:
     config:
@@ -44,4 +40,51 @@ logging:
     org.springframework.web: DEBUG
     org.springframework.cloud: DEBUG
 
+#Actuator properties for health 
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      fallbackGetAllUsers: # This is a method for dummy if user does not get a rating info
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+      
+      fallbackGetUserById: # Configuration for the second fallback method
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+#      it retry in circuit breaker 
+    retry:
+     instances:
+       fallbackGetAllUsers : 
+       max-attempts: 3
+       wait-duration: 5s
+     fallbackGetUserById : 
+      max-attempts: 3
+      wait-duration: 5s

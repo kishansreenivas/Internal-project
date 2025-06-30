@@ -14,11 +14,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   application:
     name: NOTIFICATION-SERVICE
-eureka:
-  client:
-    fetch-registry: true
-instance:
-    prefer-ip-address: true
-    register-with-eureka: true
-    service-url:
-      defaultzone:  http://localhost:8761/eureka
+    config: 
+     import: optional:configserver:http://localhost:9997
+
+#eureka:
+#  client:
+#    fetch-registry: true
+#instance:
+#    prefer-ip-address: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultzone:  http://localhost:8761/eureka

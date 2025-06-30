@@ -7,6 +7,7 @@ import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
 
 import com.BookingService.Service.BookingService;
+import com.BookingService.Service.Impl.BookingServiceImpl;
 import com.BookingService.payload.ApiResponse;
 
 import jakarta.validation.Valid;
@@ -30,7 +31,7 @@ public class BookingController {
     private static final Logger log = LoggerFactory.getLogger(BookingController.class);
 
     @Autowired
-    private BookingService bookingService;
+    private BookingServiceImpl bookingService;
 
     @PostMapping("/initiate")
     public ResponseEntity<ApiResponse<Booking>> initiateBooking(@Valid @RequestBody BookingRequest request) {
@@ -108,13 +109,13 @@ public class BookingController {
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<UserDto>> getUserWithBookings(@PathVariable UUID userId) {
+    public ResponseEntity<ApiResponse<UserDto>> getBookingsByUser(@PathVariable UUID userId) {
         try {
             UserDto user = bookingService.getUserDetails(userId);
             List<Booking> bookings = bookingService.getBookingsByUserId(userId.toString());
 
             List<Long> bookingIds = bookings.stream()
-                    .map(b -> Long.valueOf(b.getBookingId().hashCode())) // ⚠️ Consider using UUIDs instead
+                    .map(b -> Long.valueOf(b.getBookingId().hashCode())) 
                     .collect(Collectors.toList());
 
             user.setBookingIds(bookingIds);
@@ -136,7 +137,7 @@ public class BookingController {
         }
     }
 
-    @GetMapping("/All-with-seats")
+    @GetMapping("/Allwithseats")
     public ResponseEntity<ApiResponse<List<BookingWithSeatsDTO>>> getAllBookingsWithSeats() {
         try {
             List<BookingWithSeatsDTO> bookings = bookingService.getAllBookingsWithSeats();

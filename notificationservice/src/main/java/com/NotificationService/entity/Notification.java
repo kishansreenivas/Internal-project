@@ -33,10 +33,9 @@ public class Notification {
     private String content;
 
     @Enumerated(EnumType.STRING)
-    private NotificationType type; // EMAIL or SMS
-
+    private NotificationType type; 
     @Enumerated(EnumType.STRING)
-    private NotificationStatus status; // PENDING, SENT, FAILED
+    private NotificationStatus status; 
 
     private LocalDateTime createdAt;
     private LocalDateTime sentAt;

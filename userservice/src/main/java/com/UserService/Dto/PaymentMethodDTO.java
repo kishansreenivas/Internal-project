@@ -2,6 +2,8 @@ package com.UserService.Dto;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -33,5 +35,7 @@ public class PaymentMethodDTO {
 	    @NotBlank(message = "Payment type is required")
 	    private String type;
 
-    private UUID userId;
+	    @JsonIgnore
+       private UUID userId;
+   
 }

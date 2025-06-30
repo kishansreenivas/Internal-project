@@ -16,7 +16,7 @@ public class ApiResponse<T> {
     private String message;
     private T data;
 
-  
+
     public static <T> ApiResponse<T> success(T data) {
         return new ApiResponse<>(true, "OK", data);
     }
@@ -29,5 +29,5 @@ public class ApiResponse<T> {
         return new ApiResponse<>(false, message, data);
     }
 
-   
+
 }

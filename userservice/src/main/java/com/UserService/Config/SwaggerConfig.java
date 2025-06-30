@@ -1,9 +1,9 @@
 package com.UserService.Config;
 
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -17,5 +17,10 @@ public class SwaggerConfig {
             .title("FlixShow User Service API")
             .version("1.0")
             .description("API for managing user accounts in FlixShow, including admin roles"));
+    }
+    
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

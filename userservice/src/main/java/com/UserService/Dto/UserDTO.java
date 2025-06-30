@@ -1,26 +1,24 @@
 package com.UserService.Dto;
 
 
-import java.util.List;
-import java.util.UUID;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
 public class UserDTO {
-    private UUID  id;
+
+    private UUID id;
+
     @NotBlank(message = "First name is required")
     private String firstName;
 
@@ -38,13 +36,17 @@ public class UserDTO {
     @NotBlank(message = "Phone number is required")
     @Size(min = 10, max = 15, message = "Phone number must be valid")
     private String phone;
-    private List<AddressDTO> addresses;
-    private PreferencesDTO preferences;
-    private List<PaymentMethodDTO> paymentMethods;
-    private List<Long> watchlistMovieIds;
-    private List<Long> bookingId;
-    
 
-   
-  
+    private List<AddressDTO> addresses;
+
+    private List<PaymentMethodDTO> paymentMethods;
+
+    // ✅ Movie IDs in user's watchlist
+    private List<String> watchlistMovieIds = new ArrayList<>();
+
+    // ✅ Movie details (populated via Feign)
+    private List<MovieDTO> watchlistMovies = new ArrayList<>();
+
+    // ✅ Booking details
+    private List<BookingDto> bookings = new ArrayList<>();
 }

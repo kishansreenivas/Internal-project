@@ -8,9 +8,11 @@ import com.PaymentService.dto.UserDTO;
 
 import java.util.UUID;
 
-@FeignClient(name = "user-service", path = "/api/users")
+@FeignClient(name = "USER-SERVICE")
 public interface UserServiceClient {
 
  @GetMapping("/{id}")
  UserDTO getUserById(@PathVariable("id") UUID id);
+ 
+
 }

@@ -1,0 +1,16 @@
+server:
+  port: 9997
+
+spring:
+  application:
+    name: Config-Service
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Sumeet-khandale/Internal-project.git
+          searchPaths:
+          - CONFIG_SERVER
+          default-label: master
+          clone-on-start: true

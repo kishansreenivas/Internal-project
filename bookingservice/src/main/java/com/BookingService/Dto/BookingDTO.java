@@ -14,4 +14,5 @@ public class BookingDTO {
     private String showTime;
     private int numberOfSeats;
     // Add other fields if required
+    
 }

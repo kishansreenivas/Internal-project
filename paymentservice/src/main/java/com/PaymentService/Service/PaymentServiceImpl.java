@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +43,16 @@ public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private ApplicationEventPublisher publisher;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
     public PaymentResponseDTO initiatePayment(PaymentRequestDTO request) {
         log.info("ENTRY: initiatePayment() - request = {}", request);
 
-        // VALIDATION
         if (request.getAmount() == null || request.getAmount().doubleValue() <= 0) {
-            log.warn("VALIDATION FAILED: Invalid payment amount: {}", request.getAmount());
-            throw new IllegalArgumentException("Payment amount must be greater than zero");
+            log.warn("VALIDATION FAILED: Invalid amount = {}", request.getAmount());
+            throw new IllegalArgumentException("Amount must be greater than 0");
         }
 
         PaymentTransaction txn = new PaymentTransaction();
@@ -67,7 +70,6 @@ public class PaymentServiceImpl implements PaymentService {
         txn.setCompletedAt(LocalDateTime.now());
 
         repository.save(txn);
-
         publisher.publishEvent(new PaymentCompletedEvent(this, gatewayTxnId));
 
         PaymentResponseDTO response = new PaymentResponseDTO();
@@ -109,23 +111,18 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentTransaction getPaymentStatus(String transactionId) {
         log.info("ENTRY: getPaymentStatus() - transactionId = {}", transactionId);
-
         PaymentTransaction txn = repository.findByTransactionId(transactionId)
-                .orElseThrow(() -> {
-                    log.warn("VALIDATION FAILED: Transaction not found: {}", transactionId);
-                    return new TransactionNotFoundException("Transaction not found");
-                });
-
-        log.info("EXIT: getPaymentStatus() - transaction = {}", txn);
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction not found"));
+        log.info("EXIT: getPaymentStatus() - txn = {}", txn);
         return txn;
     }
 
     @Override
     public Page<PaymentTransaction> getTransactionsByUser(String userId, Pageable pageable) {
         log.info("ENTRY: getTransactionsByUser() - userId = {}", userId);
-        Page<PaymentTransaction> transactions = repository.findAllByUserId(userId, pageable);
-        log.info("EXIT: getTransactionsByUser() - count = {}", transactions.getTotalElements());
-        return transactions;
+        Page<PaymentTransaction> page = repository.findAllByUserId(userId, pageable);
+        log.info("EXIT: getTransactionsByUser() - count = {}", page.getTotalElements());
+        return page;
     }
 
     @Override
@@ -150,45 +147,28 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentTransactionDTO getPaymentByBookingId(String bookingId) {
         log.info("ENTRY: getPaymentByBookingId() - bookingId = {}", bookingId);
-
         PaymentTransaction txn = repository.findByBookingId(bookingId)
-                .orElseThrow(() -> {
-                    log.warn("VALIDATION FAILED: No payment found for bookingId = {}", bookingId);
-                    return new TransactionNotFoundException("No payment found for this booking ID");
-                });
-
+                .orElseThrow(() -> new TransactionNotFoundException("No payment found for this booking ID"));
         PaymentTransactionDTO dto = toDto(txn);
         enrichWithBooking(dto);
         enrichWithUser(dto);
-
         log.info("EXIT: getPaymentByBookingId() - dto = {}", dto);
         return dto;
     }
 
     private PaymentTransactionDTO toDto(PaymentTransaction txn) {
-        PaymentTransactionDTO dto = new PaymentTransactionDTO();
-        dto.setId(txn.getId());
-        dto.setBookingId(txn.getBookingId());
-        dto.setUserId(txn.getUserId());
-        dto.setAmount(txn.getAmount());
-        dto.setCurrency(txn.getCurrency());
-        dto.setPaymentStatus(txn.getPaymentStatus());
-        dto.setPaymentMethod(txn.getPaymentMethod());
-        dto.setTransactionId(txn.getTransactionId());
-        dto.setInitiatedAt(txn.getInitiatedAt());
-        dto.setCompletedAt(txn.getCompletedAt());
-        return dto;
+        return modelMapper.map(txn, PaymentTransactionDTO.class);
     }
 
     private void enrichWithBooking(PaymentTransactionDTO dto) {
-        log.debug("Enriching with booking info for bookingId = {}", dto.getBookingId());
-        BookingDTO bk = bookingClient.getBookingById(dto.getBookingId());
-        // optionally attach booking fields
+        log.debug("Enriching booking for bookingId = {}", dto.getBookingId());
+        BookingDTO booking = bookingClient.getSeatsForBooking(dto.getBookingId());
+        // Enrich DTO with booking data if needed
     }
 
     private void enrichWithUser(PaymentTransactionDTO dto) {
-        log.debug("Enriching with user info for userId = {}", dto.getUserId());
+        log.debug("Enriching user for userId = {}", dto.getUserId());
         UserDTO user = userClient.getUserById(UUID.fromString(dto.getUserId()));
-        // optionally attach user fields
+        // Enrich DTO with user data if needed
     }
 }

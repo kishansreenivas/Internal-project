@@ -17,6 +17,6 @@ public class SwaggerConfig {
                 .title("FlixShow Booking Service API")
                 .version("1.0")
                 .description("API documentation for Booking Service in FlixShow."))
-            .addServersItem(new Server().url("http://localhost:8082").description("Local Server"));
+            .addServersItem(new Server().url("http://localhost:9994").description("Local Server"));
     }
 }

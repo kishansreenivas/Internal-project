@@ -2,6 +2,8 @@ package com.UserService.Dto;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -32,7 +34,6 @@ public class AddressDTO {
     @Pattern(regexp = "^[0-9]{5,6}$", message = "Postal code must be 5 or 6 digits")
     private String postalCode;
  
+    @JsonIgnore
     private UUID userId;
-  
-  
 }

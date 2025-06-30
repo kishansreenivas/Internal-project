@@ -70,7 +70,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setReleaseDate(updatedMovie.getReleaseDate());
         movie.setDurationMinutes(updatedMovie.getDurationMinutes());
         movie.setStatus(updatedMovie.getStatus());
-        movie.setGenres(updatedMovie.getGenres());
+    
 
         Movie saved = movieRepository.save(movie);
         log.info("EXIT: updateMovie() updated movie: {}", saved);

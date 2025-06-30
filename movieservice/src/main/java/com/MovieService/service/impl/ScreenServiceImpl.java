@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ScreenServiceImpl implements ScreenService {
 
     private final ScreenRepository screenRepository;
     private final TheatreRepository theatreRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Screen createScreen(Screen screen) {
@@ -47,10 +49,8 @@ public class ScreenServiceImpl implements ScreenService {
                     return new EntityNotFoundException("Theatre not found");
                 });
 
-        Screen screen = new Screen();
-        screen.setName(dto.getName());
-        screen.setTotalSeats(dto.getTotalSeats());
-        screen.setTheatre(theatre);
+        Screen screen = modelMapper.map(dto, Screen.class);
+        screen.setTheatre(theatre);  // manually set the reference
 
         Screen saved = screenRepository.save(screen);
         log.info("EXIT: createScreen(ScreenRequestDto) saved: {}", saved);
@@ -93,9 +93,7 @@ public class ScreenServiceImpl implements ScreenService {
                     return new EntityNotFoundException("Screen not found");
                 });
 
-        screen.setName(updated.getName());
-        screen.setTotalSeats(updated.getTotalSeats());
-        screen.setTheatre(updated.getTheatre());
+        modelMapper.map(updated, screen);
 
         Screen saved = screenRepository.save(screen);
         log.info("EXIT: updateScreen() updated: {}", saved);

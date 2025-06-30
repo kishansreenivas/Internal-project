@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<list key="installedFeatures">
+		<item value="com.genuitec.copilot4eclipse.feature:1.5.0.202505151604"/>
 		<item value="org.eclipse.buildship:3.1.10.v20240802-1314"/>
 		<item value="org.eclipse.egit.gitflow.feature:7.2.0.202503040940-r"/>
 		<item value="org.eclipse.egit:7.2.0.202503040940-r"/>
@@ -31,4 +32,10 @@
 		<item value="org.jboss.tools.m2e.wro4j.feature:1.2.1.202301111328"/>
 		<item value="org.sonatype.m2e.egit.feature:0.17.0.202209271423"/>
 	</list>
+	<section name="CleanDialogSettings">
+		<item key="TOGGLE_SELECTED" value="true"/>
+		<item key="DIALOG_WIDTH" value="988"/>
+		<item key="DIALOG_HEIGHT" value="514"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|11.0|0|WINDOWS|1|-22|0|0|0|400|0|0|0|0|3|2|1|34|Segoe UI"/>
+	</section>
 </section>

@@ -1,5 +1,12 @@
 package com.UserService.Servicesimpl;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
 import com.UserService.Dto.AddressDTO;
 import com.UserService.Entity.Address;
 import com.UserService.Entity.User;
@@ -10,11 +17,6 @@ import com.UserService.Services.AddressService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +77,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    //@Cacheable(value = "Address", key = "#id")
     public AddressDTO getAddressById(UUID id) {
         log.info("ENTRY: getAddressById() - ID: {}", id);
 
@@ -90,6 +93,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    
     public List<AddressDTO> getAllAddresses() {
         log.info("ENTRY: getAllAddresses()");
 

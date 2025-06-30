@@ -62,7 +62,7 @@ public class PaymentController {
         return ResponseEntity.ok(new ApiResponse<>(true, transactions));
     }
 
-    @GetMapping("/api/bookings/{bookingId}")
+    @GetMapping("/bookings/{bookingId}")
     public ResponseEntity<ApiResponse<?>> getPaymentByBooking(@PathVariable String bookingId) {
         PaymentTransactionDTO dto = paymentService.getPaymentByBookingId(bookingId);
         if (dto == null) {

@@ -9,13 +9,13 @@ import java.util.Arrays;
 @Component
 public class LoggingAspect {
 
-    @Before("execution(* com.flixshow.paymentservice.service.*.*(..))")
+    @Before("execution(* com.PaymentService.Service.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
         System.out.println("➡️ Calling: " + joinPoint.getSignature().getName() +
             " | Args: " + Arrays.toString(joinPoint.getArgs()));
     }
 
-    @AfterReturning(pointcut = "execution(* com.flixshow.paymentservice.service.*.*(..))", returning = "result")
+    @AfterReturning(pointcut = "execution(* com.PaymentService.Service.*.*(..))", returning = "result")
     public void logAfter(JoinPoint joinPoint, Object result) {
         System.out.println("✅ Finished: " + joinPoint.getSignature().getName() +
             " | Returned: " + result);

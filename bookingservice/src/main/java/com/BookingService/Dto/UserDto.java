@@ -22,5 +22,5 @@ public class UserDto {
     private String phone;
     private List<Long> bookingIds;
 
-  
+    
 }

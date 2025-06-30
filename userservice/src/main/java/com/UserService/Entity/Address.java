@@ -1,7 +1,8 @@
 package com.UserService.Entity;
 
+import java.io.Serializable;
 import java.util.UUID;
-import org.hibernate.annotations.GenericGenerator;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,10 +21,10 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 @Entity
 @Table(name = "addresses")
-public class Address {
+public class Address implements Serializable{
 	  @Id
 	    @GeneratedValue(strategy = GenerationType.AUTO)
 	    private UUID id;
@@ -35,5 +36,5 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;  // ✅ ManyToOne - Address belongs to one user
-    
+
 }
