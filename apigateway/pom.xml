@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -9,13 +9,13 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.7.6</version>
-    <relativePath/>
+    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
   <groupId>com.apigateway</groupId>
   <artifactId>apigateway</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>apigateway</name>
+  <name>API Gateway</name>
   <description>API Gateway using Spring Cloud Gateway</description>
 
   <properties>
@@ -36,31 +36,38 @@
   </dependencyManagement>
 
   <dependencies>
-    <!-- Gateway and Discovery -->
+    <!-- Spring Cloud Gateway -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-gateway</artifactId>
     </dependency>
 
+    <!-- Eureka Client -->
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
     </dependency>
 
-    <!-- Optional (basic reactive web app support) -->
+    <!-- Spring Cloud Config Client (optional, only if using a config server) -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+
+    <!-- Reactive Web (required for Gateway) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
 
-    <!-- Lombok -->
+    <!-- Lombok (to reduce boilerplate) -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
 
-    <!-- Testing -->
+    <!-- Unit Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -73,6 +80,7 @@
       </exclusions>
     </dependency>
 
+    <!-- Reactor Test -->
     <dependency>
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-test</artifactId>

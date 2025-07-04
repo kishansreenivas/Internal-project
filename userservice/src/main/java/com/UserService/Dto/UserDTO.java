@@ -1,6 +1,7 @@
 package com.UserService.Dto;
 
 
+import jakarta.persistence.ElementCollection;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,6 +10,8 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Getter
 @Setter
@@ -37,7 +40,12 @@ public class UserDTO {
     @Size(min = 10, max = 15, message = "Phone number must be valid")
     private String phone;
 
+    @ElementCollection
     private List<AddressDTO> addresses;
+    @JsonIgnore
+
+    @ElementCollection
+    private AddressDTO address;
 
     private List<PaymentMethodDTO> paymentMethods;
 

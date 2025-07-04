@@ -28,7 +28,7 @@ public class BookingControllerTest {
         }
         """;
 
-        mockMvc.perform(post("/api/bookings/initiate")
+        mockMvc.perform(post("/v1/bookings/initiate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload))
                 .andExpect(status().isOk()); // change to isBadRequest if using validation

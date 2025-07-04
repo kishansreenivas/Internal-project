@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 import com.BookingService.Enum.BookingStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @Getter
@@ -30,17 +31,11 @@ public class BookedSeatRequestDTO {
     @NotBlank(message = "Screen ID must not be blank")
     private String screenId;
 
-    @NotBlank(message = "Column must not be blank")
-    private String column;
-
-    @NotBlank(message = "Row must not be blank")
-    private String row;
-
+  
     @NotNull(message = "LockedAt timestamp must not be null")
     private LocalDateTime lockedAt;
 
     @NotNull(message = "Status must be specified")
     private BookingStatus status;
 
-   
 }

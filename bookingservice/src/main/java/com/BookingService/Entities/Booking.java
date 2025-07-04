@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.BookingService.Enum.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -36,6 +37,7 @@ public class Booking {
     private String userId;
     private String showId;
     private String screenId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss.SSS")
     private LocalDateTime bookingTime;
     private String paymentId;
     private double totalAmount;

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class BookingResponse {
     private String userId;
     private String showId;
     private String screenId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss.SSS")
     private LocalDateTime bookingTime;
     private String paymentId;
     private double totalAmount;

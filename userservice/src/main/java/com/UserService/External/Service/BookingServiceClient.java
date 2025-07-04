@@ -19,5 +19,8 @@ public interface BookingServiceClient {
 
 	@GetMapping("/v1/bookings/user/{userId}")
     ApiResponse<List<BookingDto>> getBookingsByUser(@PathVariable("userId") String userId);
-
+	
+//	@GetMapping("/v1/bookings/seats")
+//    ApiResponse<List<BookingDto>> getAllBookedSeats();
+//	
 }

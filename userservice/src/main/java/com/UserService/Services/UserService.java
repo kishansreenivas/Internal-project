@@ -15,4 +15,6 @@ public interface UserService {
     List<MovieDTO> getWatchlist(UUID userId);
     void addToWatchlist(UUID userId, String movieId);
     void removeFromWatchlist(UUID userId, String movieId);
+    
+    
 }

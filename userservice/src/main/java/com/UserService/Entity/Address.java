@@ -27,7 +27,7 @@ import lombok.Setter;
 public class Address implements Serializable{
 	  @Id
 	    @GeneratedValue(strategy = GenerationType.AUTO)
-	    private UUID id;
+	    private Long id;
     private String street;
     private String city;
     private String state;

@@ -1,10 +1,7 @@
 package com.UserService.Servicesimpl;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
-import org.springframework.cache.annotation.Cacheable;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.UserService.Dto.AddressDTO;
@@ -26,6 +23,12 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
     private final AddressMapper addressMapper;
+    
+    
+
+    public Optional<Address> findById(Long id) {
+        return addressRepository.findById(id);
+    }
 
     @Override
     public AddressDTO createAddress(AddressDTO dto) {
@@ -47,7 +50,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDTO updateAddress(UUID id, AddressDTO dto) {
+    public AddressDTO updateAddress(Long id, AddressDTO dto) {
         log.info("ENTRY: updateAddress() - ID: {}, DTO: {}", id, dto);
 
         validateAddressDTO(dto);
@@ -76,44 +79,6 @@ public class AddressServiceImpl implements AddressService {
         return updatedDto;
     }
 
-    @Override
-    //@Cacheable(value = "Address", key = "#id")
-    public AddressDTO getAddressById(UUID id) {
-        log.info("ENTRY: getAddressById() - ID: {}", id);
-
-        AddressDTO dto = addressRepository.findById(id)
-                .map(addressMapper::toDto)
-                .orElseThrow(() -> {
-                    log.warn("Address not found: {}", id);
-                    return new RuntimeException("Address not found");
-                });
-
-        log.info("EXIT: getAddressById() - Address: {}", dto);
-        return dto;
-    }
-
-    @Override
-    
-    public List<AddressDTO> getAllAddresses() {
-        log.info("ENTRY: getAllAddresses()");
-
-        List<AddressDTO> addresses = addressRepository.findAll()
-                .stream()
-                .map(addressMapper::toDto)
-                .collect(Collectors.toList());
-
-        log.info("EXIT: getAllAddresses() - Total: {}", addresses.size());
-        return addresses;
-    }
-
-    @Override
-    public void deleteAddress(UUID id) {
-        log.info("ENTRY: deleteAddress() - ID: {}", id);
-
-        addressRepository.deleteById(id);
-
-        log.info("EXIT: deleteAddress() - Deleted ID: {}", id);
-    }
 
     // Validation method
     private void validateAddressDTO(AddressDTO dto) {
@@ -140,4 +105,6 @@ public class AddressServiceImpl implements AddressService {
 
         log.debug("Validation passed for AddressDTO: {}", dto);
     }
+
+
 }

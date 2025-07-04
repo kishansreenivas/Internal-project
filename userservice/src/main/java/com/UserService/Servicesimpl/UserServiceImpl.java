@@ -2,96 +2,131 @@ package com.UserService.Servicesimpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.UserService.Dto.AddressDTO;
 import com.UserService.Dto.ApiResponse;
 import com.UserService.Dto.BookingDto;
 import com.UserService.Dto.MovieDTO;
 import com.UserService.Dto.UserDTO;
+import com.UserService.Entity.Address;
 import com.UserService.Entity.User;
 import com.UserService.Enum.BookingStatus;
 import com.UserService.Exception.ResourceNotFoundException;
 import com.UserService.External.Service.BookingServiceClient;
 import com.UserService.External.Service.MovieServiceClient;
+import com.UserService.Mapper.AddressMapper;
 import com.UserService.Mapper.UserMapper;
+import com.UserService.Repositories.AddressRepository;
 import com.UserService.Repositories.UserRepository;
+import com.UserService.Services.AddressService;
 import com.UserService.Services.UserService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService {
-	@Autowired
-    private final UserRepository userRepo;
-	@Autowired
-    private final UserMapper mapper;
-	@Autowired
-    private final BookingServiceClient bookingServiceClient;
-	@Autowired
-    private final MovieServiceClient movieServiceClient;
-	
+public  class UserServiceImpl implements UserService {
+	@Autowired private  UserRepository userRepo;
+	@Autowired private  UserMapper mapper;
+	@Autowired private  BookingServiceClient bookingServiceClient;
+	@Autowired private  MovieServiceClient movieServiceClient;
+	@Autowired private  AddressServiceImpl addressService;
+	@Autowired private  AddressRepository addressRepository;
+	@Autowired private  ModelMapper modelMapper;
+	@Autowired private  AddressMapper addressMapper ;
+
 	@Override
 	public UserDTO createUser(UserDTO dto) {
 	    log.info("ENTRY: createUser() - DTO: {}", dto);
-	    // Manual null check (if needed, depending on validation at controller)
+
+	    // Validate input
 	    if (dto == null) {
 	        log.warn("UserDTO is null");
 	        throw new IllegalArgumentException("User data cannot be null");
 	    }
-	    // Map DTO to entity
+
+	    // Map DTO to entity (including nested addresses)
 	    User user = mapper.toEntity(dto);
-	    // Ensure ID is set
+
+	    // Ensure UUID is set
 	    if (user.getId() == null) {
 	        user.setId(UUID.randomUUID());
 	    }
-	    // Save to DB
+
+	    // Save user (and addresses if provided)
 	    User saved = userRepo.save(user);
-	    // Map back to DTO
+
+	    // Map saved user back to DTO
 	    UserDTO result = mapper.toDTO(saved);
+
 	    log.info("EXIT: createUser() - Saved User: {}", result);
 	    return result;
 	}
+	
+	@Override
+	@Transactional
+	public UserDTO updateUser(UUID id, UserDTO dto) {
+	    log.info("ENTRY: updateUser() - ID: {}, DTO: {}", id, dto);
 
-    @Override
-   // @CacheEvict(value = "users", key = "#id")
-    public UserDTO updateUser(UUID id, UserDTO dto) {
-        log.info("ENTRY: updateUser() - ID: {}, DTO: {}", id, dto);
+	    User existing = userRepo.findById(id)
+	            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        User existing = userRepo.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("User not found with ID: {}", id);
-                    return new ResourceNotFoundException("User not found with id: " + id);
-                });
+	    // Update fields manually 
+	    existing.setFirstName(dto.getFirstName());
+	    existing.setLastName(dto.getLastName());
+	    existing.setEmail(dto.getEmail());
+	    existing.setPhone(dto.getPhone());
+	    existing.setPassword(dto.getPassword());
 
-        mapper.updateEntityFromDto(dto, existing);
+	    // Clear existing addresses
+	    existing.getAddresses().clear();
 
-        User updated = userRepo.save(existing);
-        UserDTO result = mapper.toDTO(updated);
+	    if (dto.getAddresses() != null && !dto.getAddresses().isEmpty()) {
+	        for (AddressDTO addressDto : dto.getAddresses()) {
+	            Address addressEntity = addressMapper.toEntity(addressDto, existing);
+	            addressEntity.setUser(existing); // Make sure user is set
+	            existing.getAddresses().add(addressEntity); // Add to existing user
+	        }
+	    }
 
-        log.info("EXIT: updateUser() - Updated User: {}", result);
-        return result;
-    }
+	    // Now save the updated user
+	    User savedUser = userRepo.save(existing);
+	    UserDTO result = mapper.toDTO(savedUser);
+
+	    log.info("EXIT: updateUser() - Updated User: {}", result);
+	    return result;
+	}
 
     @Override
    // @CacheEvict(value = "users", key = "#id")
     public void deleteUser(UUID id) {
         log.info("ENTRY: deleteUser() - ID: {}", id);
 
-        if (!userRepo.existsById(id)) {
-            log.warn("User not found with ID: {}", id);
-            throw new ResourceNotFoundException("User not found with id: " + id);
-        }
+        // Fetch user to enable cascade delete of associated addresses
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("User not found with ID: {}", id);
+                    throw new ResourceNotFoundException("User not found with id: " + id);
+                });
 
-        userRepo.deleteById(id);
+        userRepo.delete(user); // Cascade deletes addresses too
         log.info("EXIT: deleteUser() - Deleted ID: {}", id);
     }
 

@@ -47,57 +47,11 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(users));
     }
 
-    // Fallback for getAllUsers
-    public ResponseEntity<ApiResponse<List<UserDTO>>> fallbackGetAllUsers(Exception ex) {
-        log.error("Fallback for getAllUsers: {}", ex.getMessage());
-        UserDTO user = new UserDTO();
-        user.setId(UUID.randomUUID());
-        user.setFirstName("Dummy");
-        user.setLastName("User");
-        user.setEmail("dummy.user@example.com");
-        user.setPhone("0000000000");
-
-        BookingDto fallbackBooking = new BookingDto();
-        fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
-        user.setBookings(List.of(fallbackBooking));
-
-        MovieDTO fallbackMovie = new MovieDTO();
-        fallbackMovie.setId("N/A");
-        fallbackMovie.setTitle("Movie service unavailable");
-        user.setWatchlistMovies(List.of(fallbackMovie));
-
-        List<UserDTO> dummyList = List.of(user);
-        return ResponseEntity.ok(ApiResponse.success(dummyList));
-    }
-
     @GetMapping("/{id}")
     @CircuitBreaker(name = USER_SERVICE_CB, fallbackMethod = "fallbackGetUserById")
     public ResponseEntity<ApiResponse<UserDTO>> getUserById(@PathVariable UUID id) {
         log.info("Fetching user with ID: {}", id);
         UserDTO user = userService.getUserById(id);
-        return ResponseEntity.ok(ApiResponse.success(user));
-    }
-
-    // Fallback for getUserById
-    public ResponseEntity<ApiResponse<UserDTO>> fallbackGetUserById(UUID id, Exception ex) {
-        log.error("Fallback for getUserById: {}", ex.getMessage());
-
-        UserDTO user = new UserDTO();
-        user.setId(id);
-        user.setFirstName("Unavailable");
-        user.setLastName("User");
-        user.setEmail("unavailable@example.com");
-        user.setPhone("N/A");
-
-        BookingDto fallbackBooking = new BookingDto();
-        fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
-        user.setBookings(List.of(fallbackBooking));
-
-        MovieDTO fallbackMovie = new MovieDTO();
-        fallbackMovie.setId("N/A");
-        fallbackMovie.setTitle("Movie service unavailable");
-        user.setWatchlistMovies(List.of(fallbackMovie));
-
         return ResponseEntity.ok(ApiResponse.success(user));
     }
 
@@ -112,8 +66,9 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable UUID id) {
         log.info("Deleting user with ID: {}", id);
         userService.deleteUser(id);
-        return ResponseEntity.ok(ApiResponse.success("User deleted successfully"));
+        return ResponseEntity.ok(ApiResponse.success("User and Users Address deleted successfully"));
     }
+
 
     @GetMapping("/watchlist/{id}")
     public ResponseEntity<ApiResponse<List<MovieDTO>>> getWatchlist(@PathVariable UUID id) {
@@ -142,5 +97,51 @@ public class UserController {
         UserDTO userDto = userService.getUserById(userId);
         UserContactDTO contactDTO = new UserContactDTO(userDto.getEmail(), userDto.getPhone());
         return ResponseEntity.ok(ApiResponse.success(contactDTO));
+    }
+    
+    // Fallback for getAllUsers
+    public ResponseEntity<ApiResponse<List<UserDTO>>> fallbackGetAllUsers(Exception ex) {
+        log.error("Fallback for getAllUsers: {}", ex.getMessage());
+        UserDTO user = new UserDTO();
+        user.setId(UUID.randomUUID());
+        user.setFirstName("Dummy");
+        user.setLastName("User");
+        user.setEmail("dummy.user@example.com");
+        user.setPhone("0000000000");
+
+        BookingDto fallbackBooking = new BookingDto();
+        fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
+        user.setBookings(List.of(fallbackBooking));
+
+        MovieDTO fallbackMovie = new MovieDTO();
+        fallbackMovie.setId("N/A");
+        fallbackMovie.setTitle("Movie service unavailable");
+        user.setWatchlistMovies(List.of(fallbackMovie));
+
+        List<UserDTO> dummyList = List.of(user);
+        return ResponseEntity.ok(ApiResponse.success(dummyList));
+    }
+    
+ // Fallback for getUserById
+    public ResponseEntity<ApiResponse<UserDTO>> fallbackGetUserById(UUID id, Exception ex) {
+        log.error("Fallback for getUserById: {}", ex.getMessage());
+
+        UserDTO user = new UserDTO();
+        user.setId(id);
+        user.setFirstName("Unavailable");
+        user.setLastName("User");
+        user.setEmail("unavailable@example.com");
+        user.setPhone("N/A");
+
+        BookingDto fallbackBooking = new BookingDto();
+        fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
+        user.setBookings(List.of(fallbackBooking));
+
+        MovieDTO fallbackMovie = new MovieDTO();
+        fallbackMovie.setId("N/A");
+        fallbackMovie.setTitle("Movie service unavailable");
+        user.setWatchlistMovies(List.of(fallbackMovie));
+
+        return ResponseEntity.ok(ApiResponse.success(user));
     }
 }

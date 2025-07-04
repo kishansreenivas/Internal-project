@@ -19,8 +19,5 @@ public class SwaggerConfig {
             .description("API for managing user accounts in FlixShow, including admin roles"));
     }
     
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+  
 }

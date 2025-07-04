@@ -3,6 +3,8 @@ package com.BookingService.Dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -32,6 +34,7 @@ public class BookingRequest {
     private String screenId;
 
     @NotNull(message = "Booking time is required")
+   
     private LocalDateTime bookingTime;
 
     private String paymentId; 

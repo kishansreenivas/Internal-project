@@ -20,7 +20,8 @@ import lombok.Setter;
 @Builder
 @Data
 public class AddressDTO {
-    private UUID id;
+	@JsonIgnore
+    private Long id;
     @NotBlank(message = "Street is required")
     private String street;
 
