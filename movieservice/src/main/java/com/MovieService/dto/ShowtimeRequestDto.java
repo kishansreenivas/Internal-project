@@ -24,6 +24,7 @@ public class ShowtimeRequestDto {
 
 	    @NotNull(message = "Show start time is required")
 	    @Future(message = "Show start time must be in the future")
+	    
 	    private LocalDateTime showStart;
 
 	    @NotNull(message = "Show end time is required")

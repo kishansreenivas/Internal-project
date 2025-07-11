@@ -3,6 +3,7 @@ package com.UserService.Dto;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Builder
 @Data
 public class AddressDTO {
-	@JsonIgnore
+	  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     @NotBlank(message = "Street is required")
     private String street;
@@ -35,6 +36,6 @@ public class AddressDTO {
     @Pattern(regexp = "^[0-9]{5,6}$", message = "Postal code must be 5 or 6 digits")
     private String postalCode;
  
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UUID userId;
 }

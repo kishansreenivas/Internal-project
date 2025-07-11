@@ -46,3 +46,8 @@ feign:
 #    register-with-eureka: true
 #    service-url:
 #      defaultzone:  http://localhost:8761/eureka/
+
+app:
+  environment: development
+  version: 1.0.0
+  owner: flixshow

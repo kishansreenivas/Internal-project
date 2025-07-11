@@ -8,7 +8,7 @@ import com.UserService.Dto.ApiResponse;
 import com.UserService.Dto.MovieDTO;
 
 //com.UserService.External.Service.MovieServiceClient.java
-@FeignClient(name = "MovieService")
+@FeignClient(name = "MOVIE-SERVICE")
 public interface MovieServiceClient {
 	
  @GetMapping("/v1/movies/{id}")

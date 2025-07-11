@@ -2,6 +2,7 @@ package com.BookingService.Service.Impl;
 
 
 import com.BookingService.Service.BookingService;
+import com.BookingService.payload.ApiResponse;
 import com.BookingService.Dto.*;
 import com.BookingService.Entities.*;
 import com.BookingService.Enum.BookingStatus;
@@ -10,6 +11,8 @@ import com.BookingService.Exception.*;
 import com.BookingService.External.Service.MovieClient;
 import com.BookingService.External.Service.UserClient;
 import com.BookingService.Repositories.*;
+
+import org.modelmapper.ModelMapper;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,6 +34,8 @@ public class BookingServiceImpl implements BookingService {
     @Autowired private UserClient userClient;
     @Autowired private MovieClient movieClient;
     @Autowired private ApplicationEventPublisher pub;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public BookingServiceImpl() {
         log.info(" BookingServiceImpl instantiated");
@@ -134,13 +139,27 @@ public class BookingServiceImpl implements BookingService {
         return user;
     }
 
+
     @Override
-    public List<Booking> getBookingsByUserId(String userId) {
+    public ApiResponse<List<BookingDTO>> getBookingsByUserId(String userId) {
         log.info("ENTRY getBookingsByUserId({})", userId);
-        List<Booking> bookings = bookingRepo.findByUserId(userId);
-        log.info("EXIT getBookingsByUserId => count={}", bookings.size());
-        return bookings;
+
+        try {
+            List<Booking> bookings = bookingRepo.findByUserId(userId);
+
+            List<BookingDTO> bookingDtos = bookings.stream()
+                    .map(booking -> modelMapper.map(booking, BookingDTO.class))
+                    .collect(Collectors.toList());
+
+            log.info("EXIT getBookingsByUserId => count={}", bookingDtos.size());
+            return ApiResponse.success("Bookings fetched", bookingDtos);
+
+        } catch (Exception e) {
+            log.error("Failed to fetch bookings for user {}", userId, e);
+            return ApiResponse.failure("Failed to fetch bookings: " + e.getMessage());
+        }
     }
+
 
     @Override
     public BookingResponse mapToResponse(Booking booking) {
@@ -183,4 +202,7 @@ public class BookingServiceImpl implements BookingService {
         log.info("EXIT fetchShowtimeDetails => start={}", dto.getShowStart());
         return dto;
     }
-}
+    
+  
+
+} 

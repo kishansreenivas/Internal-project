@@ -1,13 +1,28 @@
 package com.UserService.Servicesimpl;
 
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -42,91 +57,109 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public  class UserServiceImpl implements UserService {
-	@Autowired private  UserRepository userRepo;
-	@Autowired private  UserMapper mapper;
-	@Autowired private  BookingServiceClient bookingServiceClient;
-	@Autowired private  MovieServiceClient movieServiceClient;
-	@Autowired private  AddressServiceImpl addressService;
-	@Autowired private  AddressRepository addressRepository;
-	@Autowired private  ModelMapper modelMapper;
-	@Autowired private  AddressMapper addressMapper ;
+public class UserServiceImpl implements UserService, Serializable {
 
-	@Override
-	public UserDTO createUser(UserDTO dto) {
-	    log.info("ENTRY: createUser() - DTO: {}", dto);
-
-	    // Validate input
-	    if (dto == null) {
-	        log.warn("UserDTO is null");
-	        throw new IllegalArgumentException("User data cannot be null");
-	    }
-
-	    // Map DTO to entity (including nested addresses)
-	    User user = mapper.toEntity(dto);
-
-	    // Ensure UUID is set
-	    if (user.getId() == null) {
-	        user.setId(UUID.randomUUID());
-	    }
-
-	    // Save user (and addresses if provided)
-	    User saved = userRepo.save(user);
-
-	    // Map saved user back to DTO
-	    UserDTO result = mapper.toDTO(saved);
-
-	    log.info("EXIT: createUser() - Saved User: {}", result);
-	    return result;
-	}
-	
-	@Override
-	@Transactional
-	public UserDTO updateUser(UUID id, UserDTO dto) {
-	    log.info("ENTRY: updateUser() - ID: {}, DTO: {}", id, dto);
-
-	    User existing = userRepo.findById(id)
-	            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-
-	    // Update fields manually 
-	    existing.setFirstName(dto.getFirstName());
-	    existing.setLastName(dto.getLastName());
-	    existing.setEmail(dto.getEmail());
-	    existing.setPhone(dto.getPhone());
-	    existing.setPassword(dto.getPassword());
-
-	    // Clear existing addresses
-	    existing.getAddresses().clear();
-
-	    if (dto.getAddresses() != null && !dto.getAddresses().isEmpty()) {
-	        for (AddressDTO addressDto : dto.getAddresses()) {
-	            Address addressEntity = addressMapper.toEntity(addressDto, existing);
-	            addressEntity.setUser(existing); // Make sure user is set
-	            existing.getAddresses().add(addressEntity); // Add to existing user
-	        }
-	    }
-
-	    // Now save the updated user
-	    User savedUser = userRepo.save(existing);
-	    UserDTO result = mapper.toDTO(savedUser);
-
-	    log.info("EXIT: updateUser() - Updated User: {}", result);
-	    return result;
-	}
+    @Autowired private UserRepository userRepo;
+    @Autowired private UserMapper mapper;
+    @Autowired private BookingServiceClient bookingServiceClient;
+    @Autowired private MovieServiceClient movieServiceClient;
+    @Autowired private AddressServiceImpl addressService;
+    @Autowired private AddressRepository addressRepository;
+    @Autowired private ModelMapper modelMapper;
+    @Autowired private AddressMapper addressMapper;
+    
+    private final ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     @Override
-   // @CacheEvict(value = "users", key = "#id")
+    public UserDTO createUser(UserDTO dto) {
+        log.info("ENTRY: createUser() - DTO: {}", dto);
+
+        if (dto == null) {
+            log.warn("UserDTO is null");
+            throw new IllegalArgumentException("User data cannot be null");
+        }
+
+        try {
+            // Reflection Example: Inspect methods of UserDTO
+            Method[] methods = dto.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                log.debug("UserDTO method: {}", method.getName());
+            }
+
+            // File I/O Example
+            Path userDir = Paths.get("C://Documents//Simple//SpringBoot//File//createusers.txt");
+            if (!Files.exists(userDir)) {
+                Files.createDirectories(userDir);
+            }
+            FileWriter writer = new FileWriter(userDir.resolve("C://Documents//Simple//SpringBoot//File//createuser.txt").toFile(), true);
+            writer.write("Creating user: " + dto.getEmail() + System.lineSeparator());
+            writer.close();
+
+            User user = mapper.toEntity(dto);
+            if (user.getId() == null) {
+                user.setId(UUID.randomUUID());
+            }
+
+            User saved = userRepo.save(user);
+
+            // Concurrency: Log async without blocking
+            CompletableFuture.runAsync(() -> log.debug("Async log: user {} created", saved.getId()), executorService);
+
+            UserDTO result = mapper.toDTO(saved);
+
+            log.info("EXIT: createUser() - Saved User: {}", result);
+            return result;
+        } catch (IOException e) {
+            log.error("I/O Error while creating user: {}", e.getMessage());
+            throw new RuntimeException("Unable to log user creation", e);
+        } catch (Exception e) {
+            log.error("Unexpected error: {}", e.getMessage());
+            throw new RuntimeException("Unexpected error during user creation", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public UserDTO updateUser(UUID id, UserDTO dto) {
+        log.info("ENTRY: updateUser() - ID: {}, DTO: {}", id, dto);
+
+        User existing = userRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+        existing.setFirstName(dto.getFirstName());
+        existing.setLastName(dto.getLastName());
+        existing.setUsername(dto.getEmail());
+        existing.setEmail(dto.getEmail());
+        existing.setPhone(dto.getPhone());
+        existing.setPassword(dto.getPassword());
+
+        existing.getAddresses().clear();
+
+        if (dto.getAddresses() != null && !dto.getAddresses().isEmpty()) {
+            for (AddressDTO addressDto : dto.getAddresses()) {
+                Address addressEntity = addressMapper.toEntity(addressDto, existing);
+                addressEntity.setUser(existing);
+                existing.getAddresses().add(addressEntity);
+            }
+        }
+
+        User savedUser = userRepo.save(existing);
+        UserDTO result = mapper.toDTO(savedUser);
+
+        log.info("EXIT: updateUser() - Updated User: {}", result);
+        return result;
+    }
+
+    @Override
     public void deleteUser(UUID id) {
         log.info("ENTRY: deleteUser() - ID: {}", id);
-
-        // Fetch user to enable cascade delete of associated addresses
         User user = userRepo.findById(id)
                 .orElseThrow(() -> {
                     log.warn("User not found with ID: {}", id);
                     throw new ResourceNotFoundException("User not found with id: " + id);
                 });
 
-        userRepo.delete(user); // Cascade deletes addresses too
+        userRepo.delete(user);
         log.info("EXIT: deleteUser() - Deleted ID: {}", id);
     }
 
@@ -140,30 +173,28 @@ public  class UserServiceImpl implements UserService {
         List<String> movieIds = user.getWatchlistMovieIds();
         List<MovieDTO> watchlistMovies = new ArrayList<>();
 
-        if (movieIds != null) {
+        if (movieIds != null && !movieIds.isEmpty()) {
             for (String movieId : movieIds) {
                 try {
-                    ApiResponse<MovieDTO> movieResponse = movieServiceClient.getMovieById(movieId);
-                    if (movieResponse != null && movieResponse.isSuccess() && movieResponse.getData() != null) {
-                        watchlistMovies.add(movieResponse.getData());
+                    ApiResponse<MovieDTO> response = movieServiceClient.getMovieById(movieId);
+                    if (response != null && response.isSuccess() && response.getData() != null) {
+                        watchlistMovies.add(response.getData());
                     } else {
-                        log.warn("No movie data found for ID: {}", movieId);
+                        log.warn("Empty or failed movie data for ID: {}", movieId);
                     }
-                } catch (Exception e) {
-                    log.error("Failed to fetch movie details for ID: {} - {}", movieId, e.getMessage());
+                } catch (Exception ex) {
+                    log.error("Failed to fetch movie {}: {}", movieId, ex.getMessage());
                 }
             }
         } else {
-            log.warn("Watchlist is null for user: {}", userId);
+            log.warn("Watchlist is empty or null for user: {}", userId);
         }
 
-        log.info("EXIT: getWatchlist() - Total movies fetched: {}", watchlistMovies.size());
+        log.info("EXIT: getWatchlist() - Movies fetched: {}", watchlistMovies.size());
         return watchlistMovies;
     }
 
-
     @Override
-    //@CacheEvict(value = "watchlists", key = "#userId")
     public void addToWatchlist(UUID userId, String movieId) {
         log.info("ENTRY: addToWatchlist() - UserID: {}, MovieID: {}", userId, movieId);
 
@@ -178,8 +209,8 @@ public  class UserServiceImpl implements UserService {
 
         if (!watchlist.contains(movieId)) {
             watchlist.add(movieId);
-            user.setWatchlistMovieIds(watchlist); // ensure persistence
-            userRepo.save(user); // persist change
+            user.setWatchlistMovieIds(watchlist);
+            userRepo.save(user);
             log.info("Movie added to watchlist: {}", movieId);
         } else {
             log.debug("Movie already in watchlist: {}", movieId);
@@ -188,9 +219,7 @@ public  class UserServiceImpl implements UserService {
         log.info("EXIT: addToWatchlist() - Updated watchlist size: {}", watchlist.size());
     }
 
-
     @Override
-   // @CacheEvict(value = "watchlists", key = "#userId")
     public void removeFromWatchlist(UUID userId, String movieId) {
         log.info("ENTRY: removeFromWatchlist() - UserID: {}, MovieID: {}", userId, movieId);
 
@@ -208,7 +237,6 @@ public  class UserServiceImpl implements UserService {
     }
 
     @Override
-   // @Cacheable(value = "users")
     public List<UserDTO> getAllUsers() {
         log.info("ENTRY: getAllUsers()");
 
@@ -218,10 +246,8 @@ public  class UserServiceImpl implements UserService {
         for (User user : users) {
             UserDTO dto = mapper.toDTO(user);
 
-            // Fetch bookings
             try {
                 ApiResponse<List<BookingDto>> response = bookingServiceClient.getBookingsByUser(user.getId().toString());
-
                 if (response != null && response.getData() != null) {
                     dto.setBookings(response.getData());
                 } else {
@@ -233,7 +259,6 @@ public  class UserServiceImpl implements UserService {
                 dto.setBookings(List.of(getDummyBookingDto("Booking service is down. Unable to fetch bookings.")));
             }
 
-            // Fetch watchlist movie details
             try {
                 List<MovieDTO> movieDetails = new ArrayList<>();
                 if (user.getWatchlistMovieIds() != null) {
@@ -261,9 +286,7 @@ public  class UserServiceImpl implements UserService {
         return userDTOs;
     }
 
-
     @Override
-    //@Cacheable(value = "users", key = "#id")
     public UserDTO getUserById(UUID id) {
         log.info("ENTRY: getUserById() - ID: {}", id);
 
@@ -277,7 +300,6 @@ public  class UserServiceImpl implements UserService {
 
         try {
             ApiResponse<List<BookingDto>> response = bookingServiceClient.getBookingsByUser(id.toString());
-
             if (response != null && response.getData() != null) {
                 userDto.setBookings(response.getData());
                 log.info("Fetched {} bookings for user {}", response.getData().size(), id);
@@ -290,7 +312,6 @@ public  class UserServiceImpl implements UserService {
             userDto.setBookings(List.of(getDummyBookingDto("Booking service is down. Unable to fetch bookings.")));
         }
 
-        // Watchlist Movies Fetch Logic
         try {
             List<MovieDTO> movieDetails = new ArrayList<>();
             if (user.getWatchlistMovieIds() != null) {
@@ -315,6 +336,43 @@ public  class UserServiceImpl implements UserService {
         return userDto;
     }
 
+    @Override
+    public Optional<UserDTO> getUserByEmail(String email) {
+        log.info("Looking up user by email: {}", email);
+        Optional<UserDTO> result = userRepo.findByEmail(email)
+                                           .map(mapper::toDTO);
+
+        if (result.isEmpty()) {
+            log.warn("No user found with email: {}", email);
+            throw new ResourceNotFoundException("User not found for email: " + email);
+        }
+
+        log.info("User found for email: {}", email);
+        return result;
+    }
+
+    @Override
+    public List<UserDTO> getUsersByCity(String city) {
+        log.info("Fetching users by city: {}", city);
+        List<UserDTO> users = userRepo.findUsersByCity(city).stream()
+                                      .map(mapper::toDTO)
+                                      .collect(Collectors.toList());
+
+        if (users.isEmpty()) {
+            log.warn("No users found in city: {}", city);
+            throw new ResourceNotFoundException("No users found in city: " + city);
+        }
+
+        log.info("Found {} user(s) in city: {}", users.size(), city);
+        return users;
+    }
+
+    @Override
+    public Optional<UserDTO> getUserByUsername(String username) {
+        log.info("Fetching user by username: {}", username);
+        return userRepo.findByUsername(username)
+                             .map(mapper::toDTO);
+    }
 
     private BookingDto getDummyBookingDto(String message) {
         BookingDto dummy = new BookingDto();
@@ -328,4 +386,41 @@ public  class UserServiceImpl implements UserService {
         return dummy;
     }
 
+    public void inspectUserFields() {
+        try {
+            Field[] fields = User.class.getDeclaredFields();
+            for (Field field : fields) {
+                log.debug("User field: {} of type {}", field.getName(), field.getType());
+            }
+        } catch (Exception e) {
+            log.error("Reflection failed", e);
+        }
+    }
+
+    public void writeUserInfoToFile(UUID userId, String directory) {
+        try {
+            Path path = Paths.get(directory + "/" + userId + "_info.txt");
+            Files.writeString(path, "User exported at: " + Instant.now());
+            log.info("User info written to file: {}", path);
+        } catch (Exception e) {
+            log.error("Failed to write user info", e);
+        }
+    }
+
+    public void fetchUsersConcurrently() {
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        CompletableFuture.runAsync(() -> {
+            List<UserDTO> allUsers = getAllUsers();
+            log.info("Async fetched {} users", allUsers.size());
+        }, executor);
+    }
+
+    public boolean isServiceReachable(String host, int port) {
+        try (Socket socket = new Socket(host, port)) {
+            return true;
+        } catch (Exception e) {
+            log.warn("Service {}:{} not reachable", host, port);
+            return false;
+        }
+    }
 }

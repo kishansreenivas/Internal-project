@@ -1,13 +1,14 @@
 package com.UserService.Controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.servlet.http.Cookie;
 import com.UserService.Dto.ApiResponse;
 import com.UserService.Dto.BookingDto;
 import com.UserService.Dto.MovieDTO;
@@ -16,6 +17,9 @@ import com.UserService.Dto.UserDTO;
 import com.UserService.Services.UserService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +37,31 @@ public class UserController {
     private static final String USER_SERVICE_CB = "userServiceCircuitBreaker";
 
     @PostMapping
-    public ResponseEntity<ApiResponse<UserDTO>> createUser(@Valid @RequestBody UserDTO userDto) {
+    public ResponseEntity<ApiResponse<UserDTO>> createUser(
+            @Valid @RequestBody UserDTO userDto,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
         log.info("Creating user: {}", userDto.getEmail());
         UserDTO createdUser = userService.createUser(userDto);
-        return ResponseEntity.ok(ApiResponse.success(createdUser));
+
+        //  Create new session
+        HttpSession session = request.getSession(true);
+        session.setAttribute("userEmail", createdUser.getEmail());
+        session.setAttribute("userId", createdUser.getId());
+
+        // Create secure cookie with session ID
+        Cookie cookie = new Cookie("user_session", session.getId());
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(1800); // 30 minutes
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        log.info("Session and cookie created for user: {}", createdUser.getEmail());
+
+        return ResponseEntity.ok(ApiResponse.success(createdUser, "User created and session initialized."));
     }
+
 
     @GetMapping
     @CircuitBreaker(name = USER_SERVICE_CB, fallbackMethod = "fallbackGetAllUsers")
@@ -72,7 +96,6 @@ public class UserController {
 
     @GetMapping("/watchlist/{id}")
     public ResponseEntity<ApiResponse<List<MovieDTO>>> getWatchlist(@PathVariable UUID id) {
-        log.info("Fetching watchlist for user ID: {}", id);
         List<MovieDTO> watchlist = userService.getWatchlist(id);
         return ResponseEntity.ok(ApiResponse.success(watchlist));
     }
@@ -98,6 +121,25 @@ public class UserController {
         UserContactDTO contactDTO = new UserContactDTO(userDto.getEmail(), userDto.getPhone());
         return ResponseEntity.ok(ApiResponse.success(contactDTO));
     }
+    
+ //  Find by email
+    @GetMapping("/email")
+    public ResponseEntity<ApiResponse<UserDTO>> getUserByEmail(@RequestParam String email) {
+        return userService.getUserByEmail(email)
+                .map(user -> ResponseEntity.ok(ApiResponse.success(user, "User found")))
+                .orElse(ResponseEntity.status(404).body(ApiResponse.failure("User not found with email: " + email)));
+    }
+
+    // 🔹 Find users by city
+    @GetMapping("/city")
+    public ResponseEntity<ApiResponse<List<UserDTO>>> getUsersByCity(@RequestParam String city) {
+        List<UserDTO> users = userService.getUsersByCity(city);
+        if (users.isEmpty()) {
+            return ResponseEntity.status(404).body(ApiResponse.failure("No users found in city: " + city));
+        }
+        return ResponseEntity.ok(ApiResponse.success(users, "Users from city: " + city));
+    }
+
     
     // Fallback for getAllUsers
     public ResponseEntity<ApiResponse<List<UserDTO>>> fallbackGetAllUsers(Exception ex) {
@@ -144,4 +186,59 @@ public class UserController {
 
         return ResponseEntity.ok(ApiResponse.success(user));
     }
+    
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<String>> loginUser(
+            @RequestBody Map<String, String> loginRequest,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        String username = loginRequest.get("username");
+        String password = loginRequest.get("password");
+
+        return userService.getUserByUsername(username).map(user -> {
+            if (user.getPassword().equals(password)) {
+                HttpSession session = request.getSession(true);
+                session.setAttribute("userEmail", user.getEmail());
+                session.setAttribute("userId", user.getId());
+
+                Cookie cookie = new Cookie("user_session", session.getId());
+                cookie.setHttpOnly(true);
+                cookie.setMaxAge(1800);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+
+                //  Explicitly type the ApiResponse
+                ApiResponse<String> responseBody = ApiResponse.success("Login successful. Session and cookie set.");
+                return ResponseEntity.ok(responseBody);
+            } else {
+                ApiResponse<String> errorResponse = ApiResponse.failure("Invalid username or password");
+                return ResponseEntity.status(401).body(errorResponse);
+            }
+        }).orElseGet(() -> {
+            ApiResponse<String> errorResponse = ApiResponse.failure("User not found");
+            return ResponseEntity.status(401).body(errorResponse);
+        });
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        Cookie cookie = new Cookie("user_session", null);
+        cookie.setMaxAge(0); // delete cookie
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        log.info("User logged out. Session invalidated.");
+
+        //  Explicitly assign response with correct type
+        ApiResponse<String> responseBody = ApiResponse.success("User logged out successfully");
+        return ResponseEntity.ok(responseBody);
+    }
+
 }

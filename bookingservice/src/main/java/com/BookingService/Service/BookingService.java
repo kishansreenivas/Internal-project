@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
+import com.BookingService.payload.ApiResponse;
 import com.BookingService.Dto.ScreenDto;
 import com.BookingService.Dto.ShowtimeDto;
 
@@ -19,10 +20,11 @@ public interface BookingService {
     List<BookedSeat> getSeatsByBookingId(String bookingId);
     List<BookedSeat> getAllBookedSeats();
     UserDto getUserDetails(UUID userId);
-    List<Booking> getBookingsByUserId(String userId);
+    ApiResponse<List<BookingDTO>> getBookingsByUserId(String userId);
     BookingResponse mapToResponse(Booking booking);
     List<BookingWithSeatsDTO> getAllBookingsWithSeats();
     Page<Booking> listBookings(Pageable pageable);
     ScreenDto fetchScreenDetails(String screenId);
     ShowtimeDto fetchShowtimeDetails(String showId);
+   
 }

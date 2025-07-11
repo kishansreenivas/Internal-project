@@ -2,6 +2,9 @@ package com.UserService.Dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieDTO {
+	  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
  private String id;
  private String title;
  private String language;

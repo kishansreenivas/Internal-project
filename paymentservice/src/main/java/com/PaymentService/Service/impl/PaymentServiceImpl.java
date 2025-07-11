@@ -1,4 +1,4 @@
-package com.PaymentService.Service;
+package com.PaymentService.Service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +20,8 @@ import com.PaymentService.Exception.TransactionNotFoundException;
 import com.PaymentService.External.services.BookingServiceClient;
 import com.PaymentService.External.services.UserServiceClient;
 import com.PaymentService.Repository.PaymentTransactionRepository;
+import com.PaymentService.Service.PaymentGatewayClient;
+import com.PaymentService.Service.PaymentService;
 import com.PaymentService.dto.*;
 import com.PaymentService.entity.PaymentTransaction;
 

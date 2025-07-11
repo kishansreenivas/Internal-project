@@ -1,6 +1,7 @@
 package com.UserService.Services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.UserService.Dto.MovieDTO;
@@ -15,6 +16,8 @@ public interface UserService {
     List<MovieDTO> getWatchlist(UUID userId);
     void addToWatchlist(UUID userId, String movieId);
     void removeFromWatchlist(UUID userId, String movieId);
-    
-    
+    Optional<UserDTO> getUserByEmail(String email);
+    Optional<UserDTO> getUserByUsername(String username);
+    List<UserDTO> getUsersByCity(String city);
+ 
 }

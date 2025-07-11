@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoggingAspect {
 
+
     @Before("execution(* com.NotificationService.service.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
         System.out.println("[LOG] Entering: " + joinPoint.getSignature());
@@ -19,4 +20,5 @@ public class LoggingAspect {
     public void logAfter(JoinPoint joinPoint) {
         System.out.println("[LOG] Exiting: " + joinPoint.getSignature());
     }
+
 }

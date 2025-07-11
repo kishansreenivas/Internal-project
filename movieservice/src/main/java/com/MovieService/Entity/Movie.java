@@ -1,31 +1,28 @@
 package com.MovieService.Entity;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import org.hibernate.annotations.GenericGenerator;
-
 import com.MovieService.EnumType.MovieStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-
 @Entity
 @Table(name = "movies")
 public class Movie {

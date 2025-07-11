@@ -1,5 +1,13 @@
 server:
   port: 9991
+  servlet:
+    session:
+      timeout: 1800
+      cookie:
+        name: user_session
+        http-only: true
+        secure: false
+
 spring:
   application:
     name: USER-SERVICE
@@ -67,9 +75,7 @@ resilience4j:
         slidingWindowSize: 10
         slidingWindowType: COUNT_BASED
 
-      
-
-#      it retry in circuit breaker 
+     #      it retry in circuit breaker 
 #    retry:
 #     instances:
 #       USER_SERVICE_CB : 
@@ -78,3 +84,4 @@ resilience4j:
 #     fallbackGetUserById : 
 #      max-attempts: 3
 #      wait-duration: 5s
+           # 30 minutes

@@ -8,8 +8,12 @@ import java.util.UUID;
 import com.UserService.Enum.BookingStatus;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
 public class BookingDto {
 	  private String bookingId;
 	    private String showId;

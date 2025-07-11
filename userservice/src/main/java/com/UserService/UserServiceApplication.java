@@ -7,11 +7,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+
 @EnableFeignClients
 @EnableCaching
 @EnableAspectJAutoProxy
-//@EntityScan(basePackages = "Entity")
+@SpringBootApplication
 public class UserServiceApplication {
 
 	public static void main(String[] args) {

@@ -15,18 +15,19 @@ import lombok.Setter;
 @AllArgsConstructor
 @Data
 public class NotificationResponseDTO {
+	
     private Long id;
-   
+    private String userId;
     private String message;
-
     private String recipient;
     private String subject;
     private String content;
     private NotificationStatus status;
-    public NotificationResponseDTO(Long id, String recipient, String subject, String content, NotificationStatus status,
+    public NotificationResponseDTO(Long id,String userId, String recipient, String subject, String content, NotificationStatus status,
 			LocalDateTime sentAt) {
 		super();
 		this.id = id;
+		this.userId=userId;
 		this.recipient = recipient;
 		this.subject = subject;
 		this.content = content;
@@ -34,5 +35,5 @@ public class NotificationResponseDTO {
 		this.sentAt = sentAt;
 	}
 	private LocalDateTime sentAt;
-    
+
 }

@@ -26,16 +26,16 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    private String userId;
     private String recipient; // email or phone
     private String subject;
     @Lob
     private String content;
 
     @Enumerated(EnumType.STRING)
-    private NotificationType type; 
+    private NotificationType type;
     @Enumerated(EnumType.STRING)
-    private NotificationStatus status; 
+    private NotificationStatus status;
 
     private LocalDateTime createdAt;
     private LocalDateTime sentAt;

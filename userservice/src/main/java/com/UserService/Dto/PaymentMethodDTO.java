@@ -3,6 +3,7 @@ package com.UserService.Dto;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -20,6 +21,7 @@ import lombok.Setter;
 @Builder
 @Data
 public class PaymentMethodDTO {
+	
 	private UUID id;
 	  @NotBlank(message = "Card number is required")
 	    @Pattern(regexp = "^\\d{13,19}$", message = "Card number must be 13 to 19 digits")
@@ -35,7 +37,7 @@ public class PaymentMethodDTO {
 	    @NotBlank(message = "Payment type is required")
 	    private String type;
 
-	    @JsonIgnore
+	    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
        private UUID userId;
    
 }

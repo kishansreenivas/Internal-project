@@ -34,7 +34,8 @@ public class BookingRequest {
     private String screenId;
 
     @NotNull(message = "Booking time is required")
-   
+    
+    
     private LocalDateTime bookingTime;
 
     private String paymentId; 

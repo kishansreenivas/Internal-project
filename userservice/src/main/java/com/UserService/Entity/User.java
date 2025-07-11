@@ -40,7 +40,10 @@ public class User implements Serializable{
     private String lastName;
     private String email;
     private String phone;
-    @JsonIgnore
+    
+    @Column(nullable = false, unique = true)
+    private String username;
+
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -58,14 +61,5 @@ public class User implements Serializable{
 
     @ElementCollection
     private List<Long> bookingId = new ArrayList<>();
-    
-    //UserCodeGenerator
-//    @Column(unique = true)
-//    private String userCode;
-//    
-//    @PrePersist
-//    public void prePersist() {
-//        if (this.userCode == null && !this.addresses.isEmpty()) {
-//            this.userCode = UserCodeGenerator.generateUserCode("dev", this.addresses.get(0));
-//        }}
+   
 }

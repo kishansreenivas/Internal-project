@@ -41,4 +41,9 @@ spring:
 
     config:
     import: optional:configserver:http://localhost:9997
-    
+
+app:
+    environment: development
+    version: 1.0.0
+    owner: flixshow
+ 

@@ -17,20 +17,53 @@ spring:
     config: 
     import: optional:configserver:http://localhost:9997
 
-#resilience4j:
-#    circuitbreaker:
-#     instances:
-#      fallbackGetAllUsers: # This is a method for dummy if user does not get a rating info
-#       registerHealthIndicator: true
-#       eventConsumerBufferSize: 10
-#       failureRateThreshold: 50
-#       minimumNumberOfCalls: 5
-#       automaticTransitionFromOpenToHalfOpenEnabled: true
-#       waitDurationInOpenState: 6s
-#       permittedNumberOfCallsInHalfOpenState: 3
-#       slidingWindowSize: 10
-#       slidingWindowType: COUNT_BASED
-#
+resilience4j:
+      circuitbreaker:
+        instances:
+          userPaymentsService:
+            registerHealthIndicator: true
+            slidingWindowSize: 10
+            failureRateThreshold: 50
+            waitDurationInOpenState: 10s
+            permittedNumberOfCallsInHalfOpenState: 3
+            minimumNumberOfCalls: 5
+            automaticTransitionFromOpenToHalfOpenEnabled: true
+          bookingService:
+            registerHealthIndicator: true
+            slidingWindowSize: 10
+            failureRateThreshold: 50
+            waitDurationInOpenState: 10s
+            permittedNumberOfCallsInHalfOpenState: 3
+            minimumNumberOfCalls: 5
+            automaticTransitionFromOpenToHalfOpenEnabled: true
+
+retry:
+        instances:
+          bookingService:
+              maxRetryAttempts: 3
+              waitDuration: 2s
+          userPaymentsService:
+            maxRetryAttempts: 3
+            waitDuration: 2s
+
+#Actuator properties for health 
+management:
+   health:
+     circuitbreakers:
+       enabled: true
+   endpoints:
+     web:
+       exposure:
+         include: '*'
+   endpoint:
+     health:
+       show-details: always
+
+# Optional logging (to see when fallback/circuit breaker triggers)
+#logging:
+#  level:
+#   io.github.resilience4j: DEBUG
+
 
 #eureka:
 #  client:

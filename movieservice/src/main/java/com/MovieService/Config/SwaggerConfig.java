@@ -22,8 +22,5 @@ public class SwaggerConfig {
                 .description("API documentation for the Movie Service of FlixShow"));
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+  
 }

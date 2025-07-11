@@ -1,26 +1,37 @@
 package com.PaymentService;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import static org.mockito.BDDMockito.given;
-
+import com.PaymentService.Event.PaymentCompletedEvent;
+import com.PaymentService.Exception.RefundFailedException;
+import com.PaymentService.Exception.TransactionNotFoundException;
+import com.PaymentService.External.services.BookingServiceClient;
+import com.PaymentService.External.services.UserServiceClient;
 import com.PaymentService.Repository.PaymentTransactionRepository;
 import com.PaymentService.Service.PaymentGatewayClient;
-import com.PaymentService.Service.PaymentServiceImpl;
+import com.PaymentService.Service.impl.PaymentServiceImpl;
 import com.PaymentService.dto.PaymentRequestDTO;
 import com.PaymentService.dto.PaymentResponseDTO;
+import com.PaymentService.dto.RefundRequestDTO;
+import com.PaymentService.dto.RefundResponseDTO;
 import com.PaymentService.entity.PaymentTransaction;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
+import org.mockito.*;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class PaymentServiceImplTest {
+
+    @InjectMocks
+    private PaymentServiceImpl paymentService;
 
     @Mock
     private PaymentTransactionRepository repository;
@@ -28,48 +39,105 @@ class PaymentServiceImplTest {
     @Mock
     private PaymentGatewayClient gatewayClient;
 
-    @InjectMocks
-    private PaymentServiceImpl paymentService;
+    @Mock
+    private ApplicationEventPublisher publisher;
 
-    public PaymentServiceImplTest() {
+    @Mock
+    private UserServiceClient userClient;
+
+    @Mock
+    private BookingServiceClient bookingClient;
+
+    @Mock
+    private ModelMapper modelMapper;
+
+    private PaymentRequestDTO paymentRequest;
+    private RefundRequestDTO refundRequest;
+    private PaymentTransaction paymentTxn;
+
+    @BeforeEach
+    void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        paymentRequest = new PaymentRequestDTO();
+        paymentRequest.setBookingId("booking-123");
+        paymentRequest.setUserId("user-123");
+        paymentRequest.setAmount(BigDecimal.valueOf(100.0));
+        paymentRequest.setCurrency("INR");
+        paymentRequest.setPaymentMethod("UPI");
+
+        refundRequest = new RefundRequestDTO();
+        refundRequest.setTransactionId("TXN-123");
+
+        paymentTxn = new PaymentTransaction();
+        paymentTxn.setTransactionId("TXN-123");
+        paymentTxn.setAmount(BigDecimal.valueOf(100));
+        paymentTxn.setPaymentStatus("SUCCESS");
     }
 
     @Test
-    void testInitiatePayment() {
-        PaymentRequestDTO request = new PaymentRequestDTO();
-        request.setBookingId("BKG1");
-        request.setUserId("USER1");
-        request.setAmount(new BigDecimal("150.00"));
-        request.setCurrency("INR");
-        request.setPaymentMethod("CARD");
+    void testInitiatePayment_Success() {
+        when(repository.save(any(PaymentTransaction.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        when(gatewayClient.initiateExternalPayment(any())).thenReturn("TXN-TEST-123");
+        PaymentResponseDTO response = paymentService.initiatePayment(paymentRequest);
 
-        PaymentResponseDTO response = paymentService.initiatePayment(request);
-
+        assertNotNull(response);
         assertEquals("SUCCESS", response.getStatus());
-        assertEquals("TXN-TEST-123", response.getTransactionId());
+        assertNotNull(response.getTransactionId());
+        assertEquals("Payment processed successfully.", response.getMessage());
+
         verify(repository, times(1)).save(any(PaymentTransaction.class));
+        verify(publisher, times(1)).publishEvent(any(PaymentCompletedEvent.class));
     }
+
     @Test
-    void testInitiatePayment_shouldReturnSuccess_givenValidRequest() {
-        // Given
-        PaymentRequestDTO request = new PaymentRequestDTO();
-        request.setBookingId("BKG-1");
-        request.setUserId("USR-1");
-        request.setAmount(new BigDecimal("100.00"));
-        request.setCurrency("INR");
-        request.setPaymentMethod("CARD");
+    void testInitiatePayment_InvalidAmount_ShouldThrow() {
+        paymentRequest.setAmount(BigDecimal.ZERO);
 
-        given(gatewayClient.initiateExternalPayment(any())).willReturn("TXN-" + UUID.randomUUID());
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                paymentService.initiatePayment(paymentRequest)
+        );
 
-        // When
-        PaymentResponseDTO response = paymentService.initiatePayment(request);
-
-        // Then
-        assertThat(response.getStatus()).isEqualTo("SUCCESS");
-        assertThat(response.getTransactionId()).startsWith("TXN-");
+        assertEquals("Amount must be greater than 0", exception.getMessage());
+        verify(repository, never()).save(any());
     }
 
+    @Test
+    void testProcessRefund_Success() {
+        when(repository.findByTransactionId("TXN-123")).thenReturn(Optional.of(paymentTxn));
+        when(gatewayClient.refundTransaction("TXN-123")).thenReturn(true);
+        when(repository.save(any(PaymentTransaction.class))).thenReturn(paymentTxn);
+
+        RefundResponseDTO response = paymentService.processRefund(refundRequest);
+
+        assertNotNull(response);
+        assertEquals("REFUNDED", response.getStatus());
+        assertEquals("TXN-123", response.getRefundTransactionId());
+
+        verify(gatewayClient).refundTransaction("TXN-123");
+        verify(repository).save(paymentTxn);
+    }
+
+    @Test
+    void testProcessRefund_TransactionNotFound_ShouldThrow() {
+        when(repository.findByTransactionId("TXN-123")).thenReturn(Optional.empty());
+
+        assertThrows(TransactionNotFoundException.class, () ->
+                paymentService.processRefund(refundRequest)
+        );
+
+        verify(gatewayClient, never()).refundTransaction(any());
+    }
+
+    @Test
+    void testProcessRefund_RefundFails_ShouldThrow() {
+        when(repository.findByTransactionId("TXN-123")).thenReturn(Optional.of(paymentTxn));
+        when(gatewayClient.refundTransaction("TXN-123")).thenReturn(false);
+
+        assertThrows(RefundFailedException.class, () ->
+                paymentService.processRefund(refundRequest)
+        );
+
+        verify(gatewayClient).refundTransaction("TXN-123");
+    }
 }
