@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import org.springframework.stereotype.Service;
 
 import com.UserService.Dto.AddressDTO;
 import com.UserService.Dto.ApiResponse;
-import com.UserService.Dto.BookingDto;
+import com.UserService.Dto.BookingDTO;
 import com.UserService.Dto.MovieDTO;
 import com.UserService.Dto.UserDTO;
 import com.UserService.Entity.Address;
@@ -162,6 +163,40 @@ public class UserServiceImpl implements UserService, Serializable {
         userRepo.delete(user);
         log.info("EXIT: deleteUser() - Deleted ID: {}", id);
     }
+    
+
+    @Override
+    public Map<UUID, List<MovieDTO>> getAllWatchlists() {
+        log.info("Fetching detailed watchlists for users who booked movies");
+
+        List<User> users = userRepo.findAll();
+        Map<UUID, List<MovieDTO>> watchlistMap = new HashMap<>();
+
+        for (User user : users) {
+            List<String> movieIds = user.getWatchlistMovieIds(); // or similar field
+            if (movieIds != null && !movieIds.isEmpty()) {
+                List<MovieDTO> movies = new ArrayList<>();
+                for (String movieId : movieIds) {
+                    try {
+                        ApiResponse<MovieDTO> movieResp = movieServiceClient.getMovieById(movieId);
+                        if (movieResp != null && movieResp.isSuccess() && movieResp.getData() != null) {
+                            movies.add(movieResp.getData());
+                        }
+                    } catch (Exception e) {
+                        log.error("Error fetching movie {} for user {}: {}", movieId, user.getId(), e.getMessage());
+                    }
+                }
+                if (!movies.isEmpty()) {
+                    watchlistMap.put(user.getId(), movies);
+                    log.debug("User {}: {} movies added to watchlist", user.getId(), movies.size());
+                }
+            }
+        }
+
+        log.info("Completed fetching all user watchlists");
+        return watchlistMap;
+    }
+ 
 
     @Override
     public List<MovieDTO> getWatchlist(UUID userId) {
@@ -247,7 +282,7 @@ public class UserServiceImpl implements UserService, Serializable {
             UserDTO dto = mapper.toDTO(user);
 
             try {
-                ApiResponse<List<BookingDto>> response = bookingServiceClient.getBookingsByUser(user.getId().toString());
+                ApiResponse<List<BookingDTO>> response = bookingServiceClient.getBookingsByUser(user.getId().toString());
                 if (response != null && response.getData() != null) {
                     dto.setBookings(response.getData());
                 } else {
@@ -299,7 +334,7 @@ public class UserServiceImpl implements UserService, Serializable {
         UserDTO userDto = mapper.toDTO(user);
 
         try {
-            ApiResponse<List<BookingDto>> response = bookingServiceClient.getBookingsByUser(id.toString());
+            ApiResponse<List<BookingDTO>> response = bookingServiceClient.getBookingsByUser(id.toString());
             if (response != null && response.getData() != null) {
                 userDto.setBookings(response.getData());
                 log.info("Fetched {} bookings for user {}", response.getData().size(), id);
@@ -374,8 +409,8 @@ public class UserServiceImpl implements UserService, Serializable {
                              .map(mapper::toDTO);
     }
 
-    private BookingDto getDummyBookingDto(String message) {
-        BookingDto dummy = new BookingDto();
+    private BookingDTO getDummyBookingDto(String message) {
+        BookingDTO dummy = new BookingDTO();
         dummy.setBookingId(message);
         dummy.setShowId("N/A");
         dummy.setScreenId("N/A");

@@ -4,7 +4,7 @@ package com.BookingService.External.Service;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-import com.BookingService.Dto.UserDto;
+import com.BookingService.Dto.UserDTO;
 
 
 import java.util.UUID;
@@ -15,10 +15,10 @@ public interface UserClient {
 //    UserDto getUserById(@PathVariable("id") UUID id);
 //    
 
-    @GetMapping("/api/users/{id}")
-    UserDto getUserById(@PathVariable("id") UUID userId);
+    @GetMapping("/v1/users/{id}")
+    UserDTO getUserById(@PathVariable("id") UUID userId);
     
-    @GetMapping("/api/users/{userId}")
-    UserDto getUserWithBookings(@PathVariable("userId") UUID userId);  // ✅ Correct UUID and path
+    @GetMapping("/v1/users/{userId}")
+    UserDTO getUserWithBookings(@PathVariable("userId") UUID userId);  // ✅ Correct UUID and path
     
 }

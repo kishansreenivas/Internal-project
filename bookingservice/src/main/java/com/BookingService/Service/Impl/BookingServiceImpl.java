@@ -132,9 +132,9 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public UserDto getUserDetails(UUID userId) {
+    public UserDTO  getUserDetails(UUID userId) {
         log.info("ENTRY getUserDetails({})", userId);
-        UserDto user = userClient.getUserById(userId);
+        UserDTO user = userClient.getUserById(userId);
         log.info("EXIT getUserDetails => username={}", user.getFirstName());
         return user;
     }

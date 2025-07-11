@@ -14,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   application:
     name: PAYMENT-SERVICE
-    config: 
+config: 
     import: optional:configserver:http://localhost:9997
 
 resilience4j:

@@ -1,6 +1,7 @@
 package com.UserService.Services;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,5 +20,7 @@ public interface UserService {
     Optional<UserDTO> getUserByEmail(String email);
     Optional<UserDTO> getUserByUsername(String username);
     List<UserDTO> getUsersByCity(String city);
+    Map<UUID, List<MovieDTO>> getAllWatchlists();
+
  
 }

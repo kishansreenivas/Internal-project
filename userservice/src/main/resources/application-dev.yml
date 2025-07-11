@@ -1,21 +1,87 @@
-#used for no of time it can be called with thread
-#  ratelimiter:
-#    instances:
-#     fallbackGetAllUsers : 
-#       limit-refresh-period: 4s
-#       limit-for-period: 2
-#       timeout-duration: 2s
+server:
+  port: 9991
+  servlet:
+    session:
+      timeout: 1800
+      cookie:
+        name: user_session
+        http-only: true
+        secure: false
 
-#it retry in circuit breaker 
-#  retry:
-#    instances:
-#       fallbackGetAllUsers : 
+spring:
+  application:
+    name: USER-SERVICE
+  datasource:
+    url: jdbc:mysql://localhost:3306/userservice?useSSL=false&serverTimezone=UTC 
+    username: root
+    password: sumit
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 60000
+  jpa: 
+    hibernate: 
+      ddl-auto: update
+    debug: true
+    show-sql: true
+
+  config: 
+    import: optional:configserver:http://localhost:9997  #Eureka is there in the config server
+  cache:
+    type: redis       # Redis  for storing cache 
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 2000  # 2 seconds
+        readTimeout: 3000     # 3 seconds
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.cloud: DEBUG
+
+#Actuator properties for health 
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      USER_SERVICE_CB: # This is a method for dummy if user does not get a rating info
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+     #      it retry in circuit breaker 
+#    retry:
+#     instances:
+#       USER_SERVICE_CB : 
 #       max-attempts: 3
 #       wait-duration: 5s
-
-#it retry in circuit breaker 
-#  retry:
-#    instances:
-#       fallbackGetUserById : 
-#       max-attempts: 3
-#       wait-duration: 5s
+#     fallbackGetUserById : 
+#      max-attempts: 3
+#      wait-duration: 5s
+           # 30 minutes

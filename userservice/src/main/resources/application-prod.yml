@@ -1,0 +1,21 @@
+#used for no of time it can be called with thread
+#  ratelimiter:
+#    instances:
+#     fallbackGetAllUsers : 
+#       limit-refresh-period: 4s
+#       limit-for-period: 2
+#       timeout-duration: 2s
+
+#it retry in circuit breaker 
+#  retry:
+#    instances:
+#       fallbackGetAllUsers : 
+#       max-attempts: 3
+#       wait-duration: 5s
+
+#it retry in circuit breaker 
+#  retry:
+#    instances:
+#       fallbackGetUserById : 
+#       max-attempts: 3
+#       wait-duration: 5s

@@ -53,11 +53,12 @@ public class UserDTO {
     private List<PaymentMethodDTO> paymentMethods;
 
     // ✅ Movie IDs in user's watchlist
-//    private List<String> watchlistMovieIds = new ArrayList<>();
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<String> watchlistMovieIds = new ArrayList<>();
 
     // ✅ Movie details (populated via Feign) 
     private List<MovieDTO> watchlistMovies = new ArrayList<>();
 
     // ✅ Booking details
-    private List<BookingDto> bookings = new ArrayList<>();
+    private List<BookingDTO> bookings = new ArrayList<>();
 }

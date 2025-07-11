@@ -6,15 +6,15 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.UserService.Config.BookingClientConfig;
 import com.UserService.Dto.ApiResponse;
-import com.UserService.Dto.BookingDto;
+import com.UserService.Dto.BookingDTO;
 
-
-@FeignClient(name = "BOOKING-SERVICE") // Must match spring.application.name in BookingService
+@FeignClient(name = "BOOKING-SERVICE", configuration = BookingClientConfig.class , url = "http://localhost:9994/v1/bookings")
 public interface BookingServiceClient {
-
-	@GetMapping("/v1/bookings/user/{userId}")
- public  ApiResponse<List<BookingDto>> getBookingsByUser(@PathVariable("userId") String userId);
+	
+	@GetMapping("/user/{userId}")
+    ApiResponse<List<BookingDTO>> getBookingsByUser(@PathVariable("userId") String userId);
 	
 //	@GetMapping("/v1/bookings/seats")
 //    ApiResponse<List<BookingDto>> getAllBookedSeats();

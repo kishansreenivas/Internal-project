@@ -19,7 +19,7 @@ public interface BookingService {
     void releaseExpiredLocks();
     List<BookedSeat> getSeatsByBookingId(String bookingId);
     List<BookedSeat> getAllBookedSeats();
-    UserDto getUserDetails(UUID userId);
+    UserDTO getUserDetails(UUID userId);
     ApiResponse<List<BookingDTO>> getBookingsByUserId(String userId);
     BookingResponse mapToResponse(Booking booking);
     List<BookingWithSeatsDTO> getAllBookingsWithSeats();

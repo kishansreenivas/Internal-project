@@ -6,7 +6,7 @@ import com.BookingService.Dto.BookingResponse;
 import com.BookingService.Dto.BookingWithSeatsDTO;
 import com.BookingService.Dto.ScreenDto;
 import com.BookingService.Dto.ShowtimeDto;
-import com.BookingService.Dto.UserDto;
+import com.BookingService.Dto.UserDTO;
 import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
 
@@ -94,9 +94,9 @@ public class BookingController {
     }
 
     @GetMapping("/user/profile/{userId}")
-    public ResponseEntity<ApiResponse<UserDto>> fetchUserProfile(@PathVariable UUID userId) {
+    public ResponseEntity<ApiResponse<UserDTO>> fetchUserProfile(@PathVariable UUID userId) {
         try {
-            UserDto user = bookingService.getUserDetails(userId);
+            UserDTO user = bookingService.getUserDetails(userId);
             return ResponseEntity.ok(ApiResponse.success("User profile fetched", user));
         } catch (Exception e) {
             log.error("Failed to fetch user profile", e);

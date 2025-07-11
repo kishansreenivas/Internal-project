@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.Cookie;
 import com.UserService.Dto.ApiResponse;
-import com.UserService.Dto.BookingDto;
+import com.UserService.Dto.BookingDTO;
 import com.UserService.Dto.MovieDTO;
 import com.UserService.Dto.UserContactDTO;
 import com.UserService.Dto.UserDTO;
@@ -93,6 +93,11 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success("User and Users Address deleted successfully"));
     }
 
+    @GetMapping("/watchlists")
+    public ResponseEntity<ApiResponse<Map<UUID, List<MovieDTO>>>> getAllWatchlists() {
+        Map<UUID, List<MovieDTO>> allWatchlists = userService.getAllWatchlists();
+        return ResponseEntity.ok(ApiResponse.success(allWatchlists));
+    }
 
     @GetMapping("/watchlist/{id}")
     public ResponseEntity<ApiResponse<List<MovieDTO>>> getWatchlist(@PathVariable UUID id) {
@@ -151,7 +156,7 @@ public class UserController {
         user.setEmail("dummy.user@example.com");
         user.setPhone("0000000000");
 
-        BookingDto fallbackBooking = new BookingDto();
+        BookingDTO fallbackBooking = new BookingDTO();
         fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
         user.setBookings(List.of(fallbackBooking));
 
@@ -175,7 +180,7 @@ public class UserController {
         user.setEmail("unavailable@example.com");
         user.setPhone("N/A");
 
-        BookingDto fallbackBooking = new BookingDto();
+        BookingDTO fallbackBooking = new BookingDTO();
         fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
         user.setBookings(List.of(fallbackBooking));
 
