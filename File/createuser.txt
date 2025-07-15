@@ -1,2 +1,2 @@
-Creating user: sunilnarayan@google.com
-Creating user: aswinsandala@google.com
+username: sunilnarayan@google.com
+username: aswinsandala@google.com

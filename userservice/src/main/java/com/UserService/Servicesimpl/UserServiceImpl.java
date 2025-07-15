@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService, Serializable {
                 Files.createDirectories(userDir);
             }
             FileWriter writer = new FileWriter(userDir.resolve("C://Documents//Simple//SpringBoot//File//createuser.txt").toFile(), true);
-            writer.write("Creating user: " + dto.getEmail() + System.lineSeparator());
+            writer.write("username: " + dto.getEmail() + System.lineSeparator());
             writer.close();
 
             User user = mapper.toEntity(dto);
