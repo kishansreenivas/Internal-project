@@ -12,9 +12,10 @@ public class RouterValidator {
     public static final List<String> openApiEndpoints = List.of(
     	    "/auth/register",
     	    "/auth/login",
-    	    "/api-gateway/authenticate",  // ✅ This line
+    	    "/api-gateway/authenticate",  
     	    "/eureka",
-    	    "**/api-docs"
+    	    "/v2/api-docs"
+    	   
     );
 
     public Predicate<ServerHttpRequest> isSecured =

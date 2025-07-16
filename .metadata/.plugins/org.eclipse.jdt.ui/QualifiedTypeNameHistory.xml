@@ -1,27 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="java.lang.Long"/>
-    <fullyQualifiedTypeName name="lombok.Getter"/>
-    <fullyQualifiedTypeName name="lombok.Setter"/>
-    <fullyQualifiedTypeName name="org.modelmapper.ModelMapper"/>
-    <fullyQualifiedTypeName name="com.BookingService.Entities.Booking"/>
-    <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.Query"/>
-    <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="java.util.Optional"/>
-    <fullyQualifiedTypeName name="com.UserService.Dto.ApiResponse"/>
-    <fullyQualifiedTypeName name="java.lang.Exception"/>
-    <fullyQualifiedTypeName name="com.BookingService.payload.ApiResponse"/>
-    <fullyQualifiedTypeName name="com.BookingService.Enum.BookingStatus"/>
-    <fullyQualifiedTypeName name="com.BookingService.Dto.BookingDTO"/>
-    <fullyQualifiedTypeName name="com.UserService.Servicesimpl.UserServiceImpl"/>
-    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
-    <fullyQualifiedTypeName name="com.UserService.Controller.UserController"/>
-    <fullyQualifiedTypeName name="org.springframework.boot.test.context.SpringBootTest"/>
-    <fullyQualifiedTypeName name="org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc"/>
-    <fullyQualifiedTypeName name="org.springframework.test.context.ContextConfiguration"/>
-    <fullyQualifiedTypeName name="com.UserService.UserServiceApplication"/>
-    <fullyQualifiedTypeName name="java.util.Map"/>
-    <fullyQualifiedTypeName name="java.util.HashMap"/>
     <fullyQualifiedTypeName name="com.UserService.Dto.BookingDto"/>
     <fullyQualifiedTypeName name="feign.RequestInterceptor"/>
     <fullyQualifiedTypeName name="com.UserService.Config.BookingClientConfig"/>
@@ -60,4 +38,26 @@
     <fullyQualifiedTypeName name="javax.persistence.GenerationType"/>
     <fullyQualifiedTypeName name="javax.persistence.ManyToOne"/>
     <fullyQualifiedTypeName name="javax.persistence.JoinColumn"/>
+    <fullyQualifiedTypeName name="com.apigateway.exception.JwtTokenMissingException"/>
+    <fullyQualifiedTypeName name="com.apigateway.exception.JwtTokenIncorrectStructureException"/>
+    <fullyQualifiedTypeName name="com.apigateway.exception.JwtTokenMalformedException"/>
+    <fullyQualifiedTypeName name="com.apigateway.security.JwtTokenUtil"/>
+    <fullyQualifiedTypeName name="com.apigateway.config.JwtConfig"/>
+    <fullyQualifiedTypeName name="com.apigateway.models.ErrorResponseDto"/>
+    <fullyQualifiedTypeName name="com.apigateway.models.JwtRequest"/>
+    <fullyQualifiedTypeName name="com.apigateway.models.JwtResponse"/>
+    <fullyQualifiedTypeName name="springfox.documentation.swagger.web.SwaggerResource"/>
+    <fullyQualifiedTypeName name="com.apigateway.constants.Constants"/>
+    <fullyQualifiedTypeName name="springfox.documentation.swagger.web.SwaggerResourcesProvider"/>
+    <fullyQualifiedTypeName name="java.io.BufferedReader"/>
+    <fullyQualifiedTypeName name="java.io.FileReader"/>
+    <fullyQualifiedTypeName name="java.io.IOException"/>
+    <fullyQualifiedTypeName name="com.apigateway.models.AuthenticationStatus"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Repository"/>
+    <fullyQualifiedTypeName name="java.util.Optional"/>
+    <fullyQualifiedTypeName name="com.apigateway.models.User"/>
+    <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.JpaRepository"/>
+    <fullyQualifiedTypeName name="com.apigateway.repository.UserRepository"/>
+    <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.config.EnableJpaRepositories"/>
+    <fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.domain.EntityScan"/>
 </qualifiedTypeNameHistroy>

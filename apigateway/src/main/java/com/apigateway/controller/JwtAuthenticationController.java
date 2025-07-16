@@ -6,6 +6,7 @@ import com.apigateway.models.JwtRequest;
 import com.apigateway.models.JwtResponse;
 import com.apigateway.security.JwtTokenUtil;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +20,17 @@ import java.util.*;
 import static com.apigateway.constants.Constants.API_GATEWAY_PREDICATE;
 
 @RestController
+
 public class JwtAuthenticationController {
 
     private final JwtTokenUtil jwtTokenUtil;
-    
-
-
-    @Autowired
+       
+   
     public JwtAuthenticationController(JwtTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-  
-    @RequestMapping(value = API_GATEWAY_PREDICATE + "/authenticate", method = RequestMethod.POST)
+      @RequestMapping(value = API_GATEWAY_PREDICATE + "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
 
         String username = authenticationRequest.getUsername().trim().toLowerCase();
@@ -48,6 +47,7 @@ public class JwtAuthenticationController {
 
         if (!status.getIsAuthenticated()) {
             List<String> details = new ArrayList<>();
+            System.out.println("User is not getting getIsAuthenticated");
             details.add(status.getMessage());
             ErrorResponseDto error = new ErrorResponseDto(new Date(), HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED", details, "uri");
             return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
@@ -78,13 +78,9 @@ public class JwtAuthenticationController {
     }
 
     private AuthenticationStatus authenticate(String username, String password) {
-        // Dummy password check for demonstration
-        if (!"foo".equals(password)) {
-            return new AuthenticationStatus(false, "Invalid Username/Password");
-        }
+        // Skip the password check and always return successful authentication
         return new AuthenticationStatus(true, "Authentication Successful");
     }
-
 }
 	/**
 	 * * *** NOTE: ***

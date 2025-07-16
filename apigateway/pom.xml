@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.6</version>
+     <version>3.2.4</version>
     <relativePath/>
   </parent>
 
@@ -23,17 +23,18 @@
     <spring-cloud.version>2021.0.5</spring-cloud.version>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>${spring-cloud.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+ <dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-dependencies</artifactId>
+      <version>2023.0.1</version> <!-- Compatible with Spring Boot 2.7.6 -->
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+
 
   <dependencies>
     <!-- Spring Cloud Gateway -->
@@ -53,7 +54,8 @@
       <groupId>io.springfox</groupId>
       <artifactId>springfox-boot-starter</artifactId>
       <version>3.0.0</version>
-    </dependency>
+    </dependency> 
+
 
     <!-- JWT -->
     <dependency>
@@ -77,13 +79,18 @@
     </dependency>
 
  
-    <!-- Web (Non-reactive) -->
+    <!-- Web (Non-reactive) 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency> -->
+
+  <!-- Add JAXB API for Java 9 and above -->
+    <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.3.1</version>
     </dependency>
-
-
     <!-- Lombok -->
     <dependency>
       <groupId>org.projectlombok</groupId>
