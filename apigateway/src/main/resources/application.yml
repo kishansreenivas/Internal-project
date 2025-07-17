@@ -14,6 +14,7 @@ spring:
             - Path=/v1/users/**,/v1/addresses/**,/v1/payment-methods/**,/v1/preferences/**
           filters:
             - AuthenticationFilter
+            - AddRequestHeader=Gateway-Secret, testing
 
         - id: PAYMENT-SERVICE
           uri: lb://PAYMENT-SERVICE

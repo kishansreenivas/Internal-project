@@ -3,6 +3,8 @@ package com.UserService.Config;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+
 
 @Configuration
 public class AppConfig {
@@ -10,6 +12,11 @@ public class AppConfig {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-    
-
-}
+    @Bean
+    public FilterRegistrationBean<GatewayAuthFilter> registerFilter() {
+        FilterRegistrationBean<GatewayAuthFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new GatewayAuthFilter());
+        registrationBean.addUrlPatterns("/v1/*"); // Secure all APIs
+        return registrationBean;
+    }
+    }

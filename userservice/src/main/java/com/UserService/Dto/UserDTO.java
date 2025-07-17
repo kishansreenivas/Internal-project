@@ -10,15 +10,13 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 public class UserDTO {
 
     private UUID id;
@@ -32,12 +30,14 @@ public class UserDTO {
     @Email(message = "Email is not valid")
     @NotBlank(message = "Email is required")
     private String email;
+    
     @NotBlank(message = "Username is required")
     @Size(min = 4, max = 30, message = "Username must be between 4 and 30 characters")
     private String username;
+    
     @NotBlank(message = "Password is required")
     @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
-    private String password;
+        private String password;
 
     @NotBlank(message = "Phone number is required")
     @Size(min = 10, max = 15, message = "Phone number must be valid")
@@ -52,13 +52,13 @@ public class UserDTO {
 
     private List<PaymentMethodDTO> paymentMethods;
 
-    // ✅ Movie IDs in user's watchlist
+    //  Movie IDs in user's watchlist
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<String> watchlistMovieIds = new ArrayList<>();
 
-    // ✅ Movie details (populated via Feign) 
+    //  Movie details (populated via Feign) 
     private List<MovieDTO> watchlistMovies = new ArrayList<>();
 
-    // ✅ Booking details
+    //  Booking details
     private List<BookingDTO> bookings = new ArrayList<>();
 }

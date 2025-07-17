@@ -135,7 +135,7 @@ public class UserController {
                 .orElse(ResponseEntity.status(404).body(ApiResponse.failure("User not found with email: " + email)));
     }
 
-    // 🔹 Find users by city
+    //  Find users by city
     @GetMapping("/city")
     public ResponseEntity<ApiResponse<List<UserDTO>>> getUsersByCity(@RequestParam String city) {
         List<UserDTO> users = userService.getUsersByCity(city);
