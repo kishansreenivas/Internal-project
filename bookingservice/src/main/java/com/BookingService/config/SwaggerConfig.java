@@ -5,8 +5,14 @@ import io.swagger.v3.oas.models.info.*;
 import io.swagger.v3.oas.models.servers.Server;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import com.BookingService.Interceptor.GatewayAuthFilter;
+
+import org.springframework.context.annotation.Configuration;
+
 
 @Configuration
 @EnableWebMvc
@@ -25,5 +31,13 @@ public class SwaggerConfig {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+    
+    @Bean
+    public FilterRegistrationBean<GatewayAuthFilter> registerFilter() {
+        FilterRegistrationBean<GatewayAuthFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new GatewayAuthFilter());
+        registrationBean.addUrlPatterns("/v1/*"); // Secure all APIs
+        return registrationBean;
     }
 }

@@ -2,6 +2,7 @@ package com.UserService.Servicesimpl;
 
 
 import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.UserService.Dto.AddressDTO;
@@ -23,10 +24,11 @@ public class AddressServiceImpl implements AddressService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
     private final AddressMapper addressMapper;
-    
-    
 
-    public Optional<Address> findById(Long id) {
+
+
+    @Override
+	public Optional<Address> findById(Long id) {
         return addressRepository.findById(id);
     }
 

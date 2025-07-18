@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +38,7 @@ class MovieServiceImplTest {
         movie.setId(UUID.randomUUID().toString());
         movie.setTitle("Inception");
         movie.setLanguage("English");
-        movie.setReleaseDate(LocalDate.of(2010, 7, 16));
+        movie.setReleaseDate(LocalDateTime.of(2027, 8, 17, 0, 0));
         movie.setDurationMinutes(148);
         movie.setStatus(MovieStatus.UPCOMING);
         return movie;

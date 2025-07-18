@@ -24,4 +24,6 @@ public class AppInfoLogger {
         System.out.println("App Version: " + version);
         System.out.println("App Owner: " + owner);
     }
+    
+    
 }

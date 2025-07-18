@@ -1,8 +1,10 @@
 package com.UserService.Dto;
 
 import java.time.LocalDateTime;
+
 import com.UserService.Enum.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookingDTO {
-	  
+
 	    private String bookingId;
 	    private String showId;
 	    private String screenId;
@@ -24,7 +26,7 @@ public class BookingDTO {
 	    private String paymentId;
 	    private double totalAmount;
 	    private BookingStatus status;
-	    
+
 	    private BookingDTO getDummyBooking() {
 	        BookingDTO dummy = new BookingDTO();
 	        dummy.setBookingId("N/A");
@@ -33,7 +35,7 @@ public class BookingDTO {
 	        dummy.setBookingTime(LocalDateTime.now());
 	        dummy.setPaymentId("DUMMY_PAYMENT");
 	        dummy.setTotalAmount(0.0);
-	        dummy.setStatus(BookingStatus.CANCELLED); 
+	        dummy.setStatus(BookingStatus.CANCELLED);
 	        return dummy;
 	    }
 

@@ -3,20 +3,15 @@ package com.UserService.Mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import com.UserService.Dto.AddressDTO;
-
-
-import com.UserService.Entity.Address;
-
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.UserService.Entity.User;
-import com.UserService.Exception.ResourceNotFoundException;
-import com.UserService.Services.AddressService;
-import com.UserService.Servicesimpl.AddressServiceImpl;
+
+import com.UserService.Dto.AddressDTO;
 import com.UserService.Dto.UserDTO;
+import com.UserService.Entity.Address;
+import com.UserService.Entity.User;
 
 @Component
 public class UserMapper {

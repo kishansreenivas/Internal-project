@@ -4,15 +4,23 @@ package com.BookingService.Dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import com.BookingService.Enum.MovieStatus;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class MovieDto {
     private String id;
     private String title;
     private String language;
-    private LocalDate releaseDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime releaseDate;
     private Integer durationMinutes;
+    private MovieStatus status;
 }

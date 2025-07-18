@@ -10,7 +10,7 @@ import com.UserService.Dto.MovieDTO;
 //com.UserService.External.Service.MovieServiceClient.java
 @FeignClient(name = "MOVIE-SERVICE")
 public interface MovieServiceClient {
-	
+
  @GetMapping("/v1/movies/{id}")
  ApiResponse<MovieDTO> getMovieById(@PathVariable("id") String id);
 }

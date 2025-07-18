@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import org.hibernate.annotations.GenericGenerator;
+
 import com.UserService.Enum.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,7 +18,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,7 +40,7 @@ public class User implements Serializable{
     private String lastName;
     private String email;
     private String phone;
-    
+
     @Column(nullable = false, unique = true)
     private String username;
 
@@ -53,7 +53,7 @@ public class User implements Serializable{
     private List<Address> addresses = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();  
+    private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 
     @ElementCollection
@@ -61,5 +61,5 @@ public class User implements Serializable{
 
     @ElementCollection
     private List<Long> bookingId = new ArrayList<>();
-   
+
 }

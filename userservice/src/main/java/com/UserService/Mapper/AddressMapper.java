@@ -10,9 +10,9 @@ import com.UserService.Entity.User;
 
 @Component
 public class AddressMapper {
-	
+
 	 private final ModelMapper modelMapper;
-	
+
 	    @Autowired
 	    public AddressMapper(ModelMapper modelMapper) {
 	        this.modelMapper = modelMapper;
@@ -31,6 +31,6 @@ public class AddressMapper {
 	        address.setUser(user); // Manually set user reference
 	        return address;
 	    }
-	
+
 
 }

@@ -1,6 +1,7 @@
 package com.MovieService.Entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -32,7 +33,7 @@ public class Movie {
 	    private String id;
     private String title;
     private String language;
-    private LocalDate releaseDate;
+    private LocalDateTime releaseDate;
     private Integer durationMinutes;
 
     @Enumerated(EnumType.STRING)

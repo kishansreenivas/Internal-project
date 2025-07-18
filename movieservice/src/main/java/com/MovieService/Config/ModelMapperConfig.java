@@ -2,6 +2,7 @@ package com.MovieService.Config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,5 +27,13 @@ public class ModelMapperConfig {  // Renamed to follow class naming conventions
         });
 
         return mapper;
+    }
+    
+    @Bean
+    public FilterRegistrationBean<GatewayAuthFilter> registerFilter() {
+        FilterRegistrationBean<GatewayAuthFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new GatewayAuthFilter());
+        registrationBean.addUrlPatterns("/v1/*"); // Secure all APIs
+        return registrationBean;
     }
 }

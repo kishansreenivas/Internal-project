@@ -7,8 +7,16 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.Cookie;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.UserService.Dto.ApiResponse;
 import com.UserService.Dto.BookingDTO;
 import com.UserService.Dto.MovieDTO;
@@ -17,6 +25,7 @@ import com.UserService.Dto.UserDTO;
 import com.UserService.Services.UserService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -126,7 +135,7 @@ public class UserController {
         UserContactDTO contactDTO = new UserContactDTO(userDto.getEmail(), userDto.getPhone());
         return ResponseEntity.ok(ApiResponse.success(contactDTO));
     }
-    
+
  //  Find by email
     @GetMapping("/email")
     public ResponseEntity<ApiResponse<UserDTO>> getUserByEmail(@RequestParam String email) {
@@ -145,7 +154,7 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(users, "Users from city: " + city));
     }
 
-    
+
     // Fallback for getAllUsers
     public ResponseEntity<ApiResponse<List<UserDTO>>> fallbackGetAllUsers(Exception ex) {
         log.error("Fallback for getAllUsers: {}", ex.getMessage());
@@ -168,7 +177,7 @@ public class UserController {
         List<UserDTO> dummyList = List.of(user);
         return ResponseEntity.ok(ApiResponse.success(dummyList));
     }
-    
+
  // Fallback for getUserById
     public ResponseEntity<ApiResponse<UserDTO>> fallbackGetUserById(UUID id, Exception ex) {
         log.error("Fallback for getUserById: {}", ex.getMessage());
@@ -191,7 +200,7 @@ public class UserController {
 
         return ResponseEntity.ok(ApiResponse.success(user));
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> loginUser(
             @RequestBody Map<String, String> loginRequest,

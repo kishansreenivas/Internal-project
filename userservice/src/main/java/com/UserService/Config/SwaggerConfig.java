@@ -17,6 +17,6 @@ public class SwaggerConfig {
             .version("1.0")
             .description("API for managing user accounts in FlixShow, including admin roles"));
     }
-    
-  
+
+
 }

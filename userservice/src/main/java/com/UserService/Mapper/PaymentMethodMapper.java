@@ -10,7 +10,7 @@ import com.UserService.Entity.User;
 
 @Component
 public class PaymentMethodMapper {
-	
+
 
     private final ModelMapper modelMapper;
 

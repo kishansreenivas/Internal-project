@@ -47,7 +47,8 @@ logging:
   level:
     org.springframework.web: DEBUG
     org.springframework.cloud: DEBUG
-
+    root: INFO
+    org.springframework.test.web.servlet: DEBUG
 #Actuator properties for health 
 management:
   health:

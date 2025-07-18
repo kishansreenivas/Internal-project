@@ -21,13 +21,11 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.UserService.Dto.AddressDTO;
@@ -64,7 +62,8 @@ public class UserServiceImpl implements UserService, Serializable {
     @Autowired private AddressRepository addressRepository;
     @Autowired private ModelMapper modelMapper;
     @Autowired private AddressMapper addressMapper;
-    
+    @Autowired private BCryptPasswordEncoder encoder;
+
     private final ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     @Override
@@ -96,7 +95,7 @@ public class UserServiceImpl implements UserService, Serializable {
             if (user.getId() == null) {
                 user.setId(UUID.randomUUID());
             }
-
+            user.setPassword(encoder.encode(user.getPassword())); // ← Added password encryption here
             User saved = userRepo.save(user);
 
             // Concurrency: Log async without blocking
@@ -128,7 +127,7 @@ public class UserServiceImpl implements UserService, Serializable {
         existing.setUsername(dto.getEmail());
         existing.setEmail(dto.getEmail());
         existing.setPhone(dto.getPhone());
-        existing.setPassword(dto.getPassword());
+        existing.setPassword(encoder.encode(dto.getPassword()));
 
         existing.getAddresses().clear();
 
@@ -159,7 +158,7 @@ public class UserServiceImpl implements UserService, Serializable {
         userRepo.delete(user);
         log.info("EXIT: deleteUser() - Deleted ID: {}", id);
     }
-    
+
 
     @Override
     public Map<UUID, List<MovieDTO>> getAllWatchlists() {
@@ -192,7 +191,7 @@ public class UserServiceImpl implements UserService, Serializable {
         log.info("Completed fetching all user watchlists");
         return watchlistMap;
     }
- 
+
 
     @Override
     public List<MovieDTO> getWatchlist(UUID userId) {

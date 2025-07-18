@@ -22,5 +22,5 @@ public interface UserService {
     List<UserDTO> getUsersByCity(String city);
     Map<UUID, List<MovieDTO>> getAllWatchlists();
 
- 
+
 }
