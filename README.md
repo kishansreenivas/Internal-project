@@ -49,7 +49,7 @@ If the provided username exists in the file, a JWT token is issued.
 Use this token in the Authorization header for all protected routes.
 
 📁 Config Repo:
-CONFIG_SERVER on GitHub
+CONFIG_SERVER on GitHub for ⚙️Config Server(microservice) all the common configuration done in this file of application.yml ,dev and prod
 
 
 🧱 Microservices List
