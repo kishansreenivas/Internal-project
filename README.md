@@ -1,5 +1,5 @@
 🎬 FlixShow - A Microservices-Based Movie Booking Platform
-FlixShow is a scalable, distributed microservices-based like BookMyShow. It demonstrates modern enterprise software architecture built using Spring Boot, Spring Cloud, and a full suite of DevOps-ready tools.
+FlixShow is a scalable, distributed microservices-based like BookMyShow. It demonstrates modern enterprise software architecture built using Spring Boot, Spring Cloud.
 
 🧩 Architecture Overview
 Upload this diagram (project img.png) to the root of your project for the image to render in GitHub.
@@ -53,13 +53,13 @@ CONFIG_SERVER on GitHub for ⚙️Config Server(microservice) all the common con
 
 
 🧱 Microservices List
-👤 User-Service
-🎥 Movie-Service
-🧾 Booking-Service
-💳 Payment-Service
-📢 Notification-Service
-🌐 API-Gateway
-🔎 Eureka Server
+👤 User-Service,
+🎥 Movie-Service,
+🧾 Booking-Service,
+💳 Payment-Service,
+📢 Notification-Service,
+🌐 API-Gateway,
+🔎 Eureka Server,
 ⚙️ Config Server
 
 
