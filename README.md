@@ -2,7 +2,7 @@
 FlixShow is a scalable, distributed microservices-based like BookMyShow. It demonstrates modern enterprise software architecture built using Spring Boot, Spring Cloud, and a full suite of DevOps-ready tools.
 
 🧩 Architecture Overview
-Upload this diagram (flixshow-architecture.png) to the root of your project for the image to render in GitHub.
+Upload this diagram (project img.png) to the root of your project for the image to render in GitHub.
 
 🚀 Overview
 FlixShow allows users to:
