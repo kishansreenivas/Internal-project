@@ -11,12 +11,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-import com.BookingService.Enum.BookingStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.BookingService.constants.BookingStatus;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

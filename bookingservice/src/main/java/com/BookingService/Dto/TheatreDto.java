@@ -2,8 +2,7 @@ package com.BookingService.Dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class TheatreDto {

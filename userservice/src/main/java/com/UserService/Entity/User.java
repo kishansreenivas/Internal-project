@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.UserService.Enum.Role;
+import com.UserService.constants.Role;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

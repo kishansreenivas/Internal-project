@@ -35,7 +35,7 @@ import com.UserService.Dto.MovieDTO;
 import com.UserService.Dto.UserDTO;
 import com.UserService.Entity.Address;
 import com.UserService.Entity.User;
-import com.UserService.Enum.BookingStatus;
+
 import com.UserService.Exception.ResourceNotFoundException;
 import com.UserService.External.Service.BookingServiceClient;
 import com.UserService.External.Service.MovieServiceClient;
@@ -44,6 +44,7 @@ import com.UserService.Mapper.UserMapper;
 import com.UserService.Repositories.AddressRepository;
 import com.UserService.Repositories.UserRepository;
 import com.UserService.Services.UserService;
+import com.UserService.constants.BookingStatus;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

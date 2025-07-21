@@ -23,6 +23,7 @@ import com.UserService.Dto.MovieDTO;
 import com.UserService.Dto.UserContactDTO;
 import com.UserService.Dto.UserDTO;
 import com.UserService.Services.UserService;
+import com.UserService.constants.AppMessages;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.servlet.http.Cookie;
@@ -68,7 +69,7 @@ public class UserController {
 
         log.info("Session and cookie created for user: {}", createdUser.getEmail());
 
-        return ResponseEntity.ok(ApiResponse.success(createdUser, "User created and session initialized."));
+        return ResponseEntity.ok(ApiResponse.success(createdUser, AppMessages.USER_CREATED));
     }
 
 
@@ -99,7 +100,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> deleteUser(@PathVariable UUID id) {
         log.info("Deleting user with ID: {}", id);
         userService.deleteUser(id);
-        return ResponseEntity.ok(ApiResponse.success("User and Users Address deleted successfully"));
+        return ResponseEntity.ok(ApiResponse.success(AppMessages.USER_DELETED));
     }
 
     @GetMapping("/watchlists")

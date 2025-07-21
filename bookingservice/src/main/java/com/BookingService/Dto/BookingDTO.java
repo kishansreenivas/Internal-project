@@ -2,7 +2,7 @@ package com.BookingService.Dto;
 
 import java.time.LocalDateTime;
 
-import com.BookingService.Enum.BookingStatus;
+import com.BookingService.constants.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -14,8 +14,6 @@ import lombok.Setter;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class BookingDTO {
 
 	    private String bookingId;

@@ -11,10 +11,13 @@ import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
 
 import com.BookingService.Service.Impl.BookingServiceImpl;
+import com.BookingService.constants.BookingMessages;
 import com.BookingService.mapper.BookingMapper;
 import com.BookingService.payload.ApiResponse;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.slf4j.Logger;
@@ -28,12 +31,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Validated
+@Slf4j
 @RestController
 @RequestMapping("/v1/bookings")
 public class BookingController {
 
-    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
-
+   
     @Autowired
     private BookingServiceImpl bookingService;
     
@@ -51,10 +54,17 @@ public class BookingController {
                     request.getSeatIds(),
                     request.getTotalAmount()
             );
-            return ResponseEntity.ok(ApiResponse.success("Booking initiated successfully", booking));
+            log.info("Booking successfully initiated: bookingId={}, userId={}, showId={}, screenId={}, seatIds={}, totalAmount={}",
+                    booking.getBookingId(),
+                    request.getUserId(),
+                    request.getShowId(),
+                    request.getScreenId(),
+                    request.getSeatIds(),
+                    request.getTotalAmount());
+            return ResponseEntity.ok(ApiResponse.success(BookingMessages.BOOKING_INITIATED_SUCCESS, booking));
         } catch (Exception e) {
             log.error("Failed to initiate booking", e);
-            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to initiate booking: " + e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(BookingMessages.BOOKING_CANCELLATION_FAILED + e.getMessage()));
         }
     }
 
@@ -63,10 +73,10 @@ public class BookingController {
         try {
             log.info("Confirming bookingId={} with paymentId={}", bookingId, paymentId);
             Booking confirmed = bookingService.confirmBooking(bookingId, paymentId);
-            return ResponseEntity.ok(ApiResponse.success("Booking confirmed", confirmed));
+            return ResponseEntity.ok(ApiResponse.success(BookingMessages.BOOKING_CONFIRMED_SUCCESS, confirmed));
         } catch (Exception e) {
             log.error("Booking confirmation failed", e);
-            return ResponseEntity.badRequest().body(ApiResponse.failure("Booking confirmation failed: " + e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(BookingMessages.BOOKING_CONFIRMATION_FAILED + e.getMessage()));
         }
     }
 

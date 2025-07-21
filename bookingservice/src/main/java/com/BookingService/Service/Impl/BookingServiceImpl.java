@@ -5,7 +5,8 @@ import com.BookingService.Service.BookingService;
 import com.BookingService.payload.ApiResponse;
 import com.BookingService.Dto.*;
 import com.BookingService.Entities.*;
-import com.BookingService.Enum.BookingStatus;
+import com.BookingService.constants.BookingMessages;
+import com.BookingService.constants.BookingStatus;
 import com.BookingService.Event.BookingConfirmedEvent;
 import com.BookingService.Exception.*;
 import com.BookingService.External.Service.MovieClient;
@@ -152,11 +153,11 @@ public class BookingServiceImpl implements BookingService {
                     .collect(Collectors.toList());
 
             log.info("EXIT getBookingsByUserId => count={}", bookingDtos.size());
-            return ApiResponse.success("Bookings fetched", bookingDtos);
+            return ApiResponse.success(BookingMessages.USER_BOOKINGS_FETCHED, bookingDtos);
 
         } catch (Exception e) {
             log.error("Failed to fetch bookings for user {}", userId, e);
-            return ApiResponse.failure("Failed to fetch bookings: " + e.getMessage());
+            return ApiResponse.failure(BookingMessages.USER_BOOKINGS_FETCH_FAILED + ": " + e.getMessage());
         }
     }
 

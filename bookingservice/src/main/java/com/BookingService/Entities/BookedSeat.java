@@ -4,11 +4,10 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.BookingService.Enum.BookingStatus;
+import com.BookingService.constants.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,14 +18,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@Getter
-@Setter
+
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Data 
 @Entity
 @Table(name = "booked_seat")
 public class BookedSeat {

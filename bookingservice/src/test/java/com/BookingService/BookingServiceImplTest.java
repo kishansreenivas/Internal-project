@@ -1,7 +1,7 @@
 package com.BookingService;
 
 import com.BookingService.Entities.*;
-import com.BookingService.Enum.BookingStatus;
+import com.BookingService.constants.BookingStatus;
 import com.BookingService.Exception.SeatAlreadyBookedException;
 import com.BookingService.Repositories.BookedSeatRepository;
 import com.BookingService.Repositories.BookingRepository;

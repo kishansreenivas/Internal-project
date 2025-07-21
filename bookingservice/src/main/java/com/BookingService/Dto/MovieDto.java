@@ -6,12 +6,11 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.BookingService.Enum.MovieStatus;
+import com.BookingService.constants.MovieStatus;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

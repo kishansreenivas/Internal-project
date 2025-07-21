@@ -2,7 +2,7 @@ package com.UserService.Dto;
 
 import java.time.LocalDateTime;
 
-import com.UserService.Enum.BookingStatus;
+import com.UserService.constants.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class BookingDTO {
 	    private LocalDateTime bookingTime;
 	    private String paymentId;
 	    private double totalAmount;
-	    private BookingStatus status;
+	    private com.UserService.constants.BookingStatus status;
 
 	    private BookingDTO getDummyBooking() {
 	        BookingDTO dummy = new BookingDTO();
