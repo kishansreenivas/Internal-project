@@ -85,10 +85,11 @@ public class BookingController {
         try {
             log.info("Cancelling bookingId={}", bookingId);
             Booking cancelled = bookingService.cancelBooking(bookingId);
-            return ResponseEntity.ok(ApiResponse.success("Booking cancelled", cancelled));
+            return ResponseEntity.ok(ApiResponse.success(BookingMessages.BOOKING_CANCELLED_SUCCESS, cancelled));
         } catch (Exception e) {
             log.error("Failed to cancel booking", e);
-            return ResponseEntity.badRequest().body(ApiResponse.failure("Failed to cancel booking: " + e.getMessage()));
+            return ResponseEntity.badRequest().body(ApiResponse.failure(BookingMessages.BOOKING_CANCELLATION_FAILED + ": " + e.getMessage()));
+
         }
     }
 

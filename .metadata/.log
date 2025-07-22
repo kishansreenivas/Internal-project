@@ -11494,3 +11494,12 @@ org.eclipse.jface.text.BadLocationException: 388
 	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:670)
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:607)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1492)
+
+!ENTRY com.genuitec.copilot4eclipse.chat 1 0 2025-07-21 20:18:54.820
+!MESSAGE [C4E] Internal server stopped: Server@3595e220{STOPPED}[10.0.25,sto=0]
+
+!ENTRY com.genuitec.copilot4eclipse.chat 1 0 2025-07-21 20:18:54.821
+!MESSAGE [C4E] Internal server stopped: true
+
+!ENTRY org.eclipse.core.resources 2 10035 2025-07-21 20:19:25.989
+!MESSAGE The workspace will exit with unsaved changes in this session.
