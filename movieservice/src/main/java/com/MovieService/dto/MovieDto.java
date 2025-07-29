@@ -1,7 +1,7 @@
 package com.MovieService.dto;
 
 
-import com.MovieService.EnumType.MovieStatus;
+import com.MovieService.constants.MovieStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.*;

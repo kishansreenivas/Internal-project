@@ -61,7 +61,7 @@ public class UserDTO {
     private List<String> watchlistMovieIds = new ArrayList<>();
 
     //  Movie details (populated via Feign)
-    private List<MovieDTO> watchlistMovies = new ArrayList<>();
+    private List<MovieDto> watchlistMovies = new ArrayList<>();
 
     //  Booking details
     private List<BookingDTO> bookings = new ArrayList<>();

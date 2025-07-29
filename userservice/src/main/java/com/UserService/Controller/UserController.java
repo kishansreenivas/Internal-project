@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.UserService.Dto.ApiResponse;
 import com.UserService.Dto.BookingDTO;
-import com.UserService.Dto.MovieDTO;
+import com.UserService.Dto.MovieDto;
 import com.UserService.Dto.UserContactDTO;
 import com.UserService.Dto.UserDTO;
 import com.UserService.Services.UserService;
@@ -34,11 +34,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
-@RequestMapping("/v1/users")
+
 @RequiredArgsConstructor
 @Validated
 @Slf4j
+@RestController
+@RequestMapping("/v1/users")
 public class UserController {
 
     @Autowired
@@ -103,15 +104,16 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(AppMessages.USER_DELETED));
     }
 
+    
     @GetMapping("/watchlists")
-    public ResponseEntity<ApiResponse<Map<UUID, List<MovieDTO>>>> getAllWatchlists() {
-        Map<UUID, List<MovieDTO>> allWatchlists = userService.getAllWatchlists();
+    public ResponseEntity<ApiResponse<Map<UUID, List<MovieDto>>>> getAllWatchlists() {
+        Map<UUID, List<MovieDto>> allWatchlists = userService.getAllWatchlists();
         return ResponseEntity.ok(ApiResponse.success(allWatchlists));
     }
 
     @GetMapping("/watchlist/{id}")
-    public ResponseEntity<ApiResponse<List<MovieDTO>>> getWatchlist(@PathVariable UUID id) {
-        List<MovieDTO> watchlist = userService.getWatchlist(id);
+    public ResponseEntity<ApiResponse<List<MovieDto>>> getWatchlist(@PathVariable UUID id) {
+        List<MovieDto> watchlist = userService.getWatchlist(id);
         return ResponseEntity.ok(ApiResponse.success(watchlist));
     }
 
@@ -170,7 +172,7 @@ public class UserController {
         fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
         user.setBookings(List.of(fallbackBooking));
 
-        MovieDTO fallbackMovie = new MovieDTO();
+        MovieDto fallbackMovie = new MovieDto();
         fallbackMovie.setId("N/A");
         fallbackMovie.setTitle("Movie service unavailable");
         user.setWatchlistMovies(List.of(fallbackMovie));
@@ -194,7 +196,7 @@ public class UserController {
         fallbackBooking.setBookingId("Booking service is down. Unable to fetch bookings.");
         user.setBookings(List.of(fallbackBooking));
 
-        MovieDTO fallbackMovie = new MovieDTO();
+        MovieDto fallbackMovie = new MovieDto();
         fallbackMovie.setId("N/A");
         fallbackMovie.setTitle("Movie service unavailable");
         user.setWatchlistMovies(List.of(fallbackMovie));

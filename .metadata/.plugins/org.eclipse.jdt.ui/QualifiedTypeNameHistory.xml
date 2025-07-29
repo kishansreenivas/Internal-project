@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="com.apigateway.config.JwtConfig"/>
-    <fullyQualifiedTypeName name="com.apigateway.models.ErrorResponseDto"/>
     <fullyQualifiedTypeName name="com.apigateway.models.JwtRequest"/>
     <fullyQualifiedTypeName name="com.apigateway.models.JwtResponse"/>
     <fullyQualifiedTypeName name="springfox.documentation.swagger.web.SwaggerResource"/>
@@ -56,8 +54,10 @@
     <fullyQualifiedTypeName name="com.UserService.Controller.PaymentMethodController"/>
     <fullyQualifiedTypeName name="com.UserService.constants.Role"/>
     <fullyQualifiedTypeName name="com.UserService.constants.BookingStatus"/>
-    <fullyQualifiedTypeName name="com.UserService.constants.AppMessages"/>
     <fullyQualifiedTypeName name="lombok.extern.slf4j.Slf4j"/>
     <fullyQualifiedTypeName name="lombok.Data"/>
     <fullyQualifiedTypeName name="com.BookingService.constants.BookingMessages"/>
+    <fullyQualifiedTypeName name="com.UserService.Dto.MovieDto"/>
+    <fullyQualifiedTypeName name="com.UserService.constants.MovieStatus"/>
+    <fullyQualifiedTypeName name="com.UserService.constants.AppMessages"/>
 </qualifiedTypeNameHistroy>

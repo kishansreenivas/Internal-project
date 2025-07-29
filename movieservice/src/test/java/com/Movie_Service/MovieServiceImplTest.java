@@ -2,9 +2,9 @@ package com.Movie_Service;
 
 
 import com.MovieService.Entity.Movie;
-import com.MovieService.EnumType.MovieStatus;
 import com.MovieService.Exception.ResourceNotFoundException;
 import com.MovieService.Repository.MovieRepository;
+import com.MovieService.constants.MovieStatus;
 import com.MovieService.service.impl.MovieServiceImpl;
 
 import org.junit.jupiter.api.Disabled;

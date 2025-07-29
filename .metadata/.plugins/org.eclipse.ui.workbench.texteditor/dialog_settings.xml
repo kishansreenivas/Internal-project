@@ -6,8 +6,15 @@
 		<item key="DIALOG_Y_ORIGIN" value="392"/>
 	</section>
 	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="true"/>
 		<list key="findhistory">
+			<item value="MovieDTO"/>
+			<item value="MovieDto"/>
 			<item value="run"/>
+		</list>
+		<list key="replacehistory">
+			<item value="MovieDto"/>
+			<item value="MovieDTo"/>
 		</list>
 	</section>
 </section>

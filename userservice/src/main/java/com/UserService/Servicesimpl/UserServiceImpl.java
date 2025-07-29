@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 import com.UserService.Dto.AddressDTO;
 import com.UserService.Dto.ApiResponse;
 import com.UserService.Dto.BookingDTO;
-import com.UserService.Dto.MovieDTO;
+import com.UserService.Dto.MovieDto;
 import com.UserService.Dto.UserDTO;
 import com.UserService.Entity.Address;
 import com.UserService.Entity.User;
@@ -44,15 +44,17 @@ import com.UserService.Mapper.UserMapper;
 import com.UserService.Repositories.AddressRepository;
 import com.UserService.Repositories.UserRepository;
 import com.UserService.Services.UserService;
+import com.UserService.constants.AppMessages;
 import com.UserService.constants.BookingStatus;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
+
 @RequiredArgsConstructor
 @Slf4j
+@Service
 public class UserServiceImpl implements UserService, Serializable {
 
     @Autowired private UserRepository userRepo;
@@ -66,6 +68,107 @@ public class UserServiceImpl implements UserService, Serializable {
     @Autowired private BCryptPasswordEncoder encoder;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(5);
+    
+    @Override
+    public List<UserDTO> getAllUsers() {
+    	  log.info(AppMessages.ENTRY_LOG_MESSAGE, "getAllUsers");
+
+        List<User> users = userRepo.findAll();  
+        List<UserDTO> userDTOs = new ArrayList<>(); //empty list he
+
+        for (User user : users) {
+            UserDTO dto = mapper.toDTO(user);
+
+            try {
+                ApiResponse<List<BookingDTO>> response = bookingServiceClient.getBookingsByUser(user.getId().toString());
+                if (response != null && response.getData() != null) {
+                    dto.setBookings(response.getData());
+                } else {
+                	log.warn(AppMessages.NO_BOOKINGS_FOUND_LOG_MESSAGE, user.getId());
+                    dto.setBookings(Collections.emptyList());
+                }
+            } catch (Exception e) {
+                log.error("Failed to fetch bookings for user {}: {}", user.getId(), e.getMessage());
+                dto.setBookings(List.of(getDummyBookingDto(AppMessages.BOOKING_SERVICE_ERROR_MESSAGE)));
+            }
+
+            try {
+                List<MovieDto> movieDetails = new ArrayList<>();
+                if (user.getWatchlistMovieIds() != null) {
+                    for (String movieId : user.getWatchlistMovieIds()) {
+                        try {
+                            ApiResponse<MovieDto> movieResponse = movieServiceClient.getMovieById(movieId);
+                            if (movieResponse != null && movieResponse.isSuccess() && movieResponse.getData() != null) {
+                                movieDetails.add(movieResponse.getData());
+                            }
+                        } catch (Exception ex) {
+                            log.error(AppMessages.NO_MOVIES_FOUND_LOG_MESSAGE, movieId, user.getId(), ex.getMessage());
+                        }
+                    }
+                }
+                dto.setWatchlistMovies(movieDetails);
+            } catch (Exception ex) {
+                log.error(AppMessages.MOVIE_SERVICE_ERROR_LOG_MESSAGE, user.getId(), ex.getMessage());
+                dto.setWatchlistMovies(Collections.emptyList());
+            }
+
+            userDTOs.add(dto);
+        }
+
+        log.info("EXIT: getAllUsers() - Count: {}", userDTOs.size());
+        return userDTOs;
+    }
+
+    @Override
+    public UserDTO getUserById(UUID id) {
+        log.info(AppMessages.ENTRY_LOG_MESSAGE, id);
+
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> {
+                    log.warn(AppMessages.USER_NOT_FOUND_LOG_MESSAGE, id);
+                    return new ResourceNotFoundException("User not found");
+                });
+
+        UserDTO userDto = mapper.toDTO(user);
+
+        try {
+            ApiResponse<List<BookingDTO>> response = bookingServiceClient.getBookingsByUser(id.toString());
+            if (response != null && response.getData() != null) {
+                userDto.setBookings(response.getData());
+                log.info("Fetched {} bookings for user {}", response.getData().size(), id);
+            } else {
+                log.warn("No bookings returned for user {}", id);
+                userDto.setBookings(Collections.emptyList());
+            }
+        } catch (Exception e) {
+            log.error("Failed to fetch bookings for user {}: {}", id, e.getMessage());
+            userDto.setBookings(List.of(getDummyBookingDto("Booking service is down. Unable to fetch bookings.")));
+        }
+
+        try {
+            List<MovieDto> movieDetails = new ArrayList<>();
+            if (user.getWatchlistMovieIds() != null) {
+                for (String movieId : user.getWatchlistMovieIds()) {
+                    try {
+                        ApiResponse<MovieDto> movieResponse = movieServiceClient.getMovieById(movieId);
+                        if (movieResponse != null && movieResponse.isSuccess() && movieResponse.getData() != null) {
+                            movieDetails.add(movieResponse.getData());
+                        }
+                    } catch (Exception ex) {
+                        log.error("Failed to fetch movie {}: {}", movieId, ex.getMessage());
+                    }
+                }
+            }
+            userDto.setWatchlistMovies(movieDetails);
+        } catch (Exception ex) {
+            log.error("MovieService down for user {}: {}", id, ex.getMessage());
+            userDto.setWatchlistMovies(Collections.emptyList());
+        }
+
+        log.info("EXIT: getUserById() - Result: {}", userDto);
+        return userDto;
+    }
+
 
     @Override
     public UserDTO createUser(UserDTO dto) {
@@ -83,7 +186,7 @@ public class UserServiceImpl implements UserService, Serializable {
                 log.debug("UserDTO method: {}", method.getName());
             }
 
-            // File I/O Example
+            // File I/O 
             Path userDir = Paths.get("C://Documents//Simple//SpringBoot//File//createusers.txt");
             if (!Files.exists(userDir)) {
                 Files.createDirectories(userDir);
@@ -162,19 +265,19 @@ public class UserServiceImpl implements UserService, Serializable {
 
 
     @Override
-    public Map<UUID, List<MovieDTO>> getAllWatchlists() {
+    public Map<UUID, List<MovieDto>> getAllWatchlists() {
         log.info("Fetching detailed watchlists for users who booked movies");
 
         List<User> users = userRepo.findAll();
-        Map<UUID, List<MovieDTO>> watchlistMap = new HashMap<>();
+        Map<UUID, List<MovieDto>> watchlistMap = new HashMap<>();
 
         for (User user : users) {
             List<String> movieIds = user.getWatchlistMovieIds(); // or similar field
             if (movieIds != null && !movieIds.isEmpty()) {
-                List<MovieDTO> movies = new ArrayList<>();
+                List<MovieDto> movies = new ArrayList<>();
                 for (String movieId : movieIds) {
                     try {
-                        ApiResponse<MovieDTO> movieResp = movieServiceClient.getMovieById(movieId);
+                        ApiResponse<MovieDto> movieResp = movieServiceClient.getMovieById(movieId);
                         if (movieResp != null && movieResp.isSuccess() && movieResp.getData() != null) {
                             movies.add(movieResp.getData());
                         }
@@ -195,19 +298,19 @@ public class UserServiceImpl implements UserService, Serializable {
 
 
     @Override
-    public List<MovieDTO> getWatchlist(UUID userId) {
+    public List<MovieDto> getWatchlist(UUID userId) {
         log.info("ENTRY: getWatchlist() - UserID: {}", userId);
 
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
         List<String> movieIds = user.getWatchlistMovieIds();
-        List<MovieDTO> watchlistMovies = new ArrayList<>();
+        List<MovieDto> watchlistMovies = new ArrayList<>();
 
         if (movieIds != null && !movieIds.isEmpty()) {
             for (String movieId : movieIds) {
                 try {
-                    ApiResponse<MovieDTO> response = movieServiceClient.getMovieById(movieId);
+                    ApiResponse<MovieDto> response = movieServiceClient.getMovieById(movieId);
                     if (response != null && response.isSuccess() && response.getData() != null) {
                         watchlistMovies.add(response.getData());
                     } else {
@@ -267,106 +370,7 @@ public class UserServiceImpl implements UserService, Serializable {
         }
     }
 
-    @Override
-    public List<UserDTO> getAllUsers() {
-        log.info("ENTRY: getAllUsers()");
-
-        List<User> users = userRepo.findAll();
-        List<UserDTO> userDTOs = new ArrayList<>();
-
-        for (User user : users) {
-            UserDTO dto = mapper.toDTO(user);
-
-            try {
-                ApiResponse<List<BookingDTO>> response = bookingServiceClient.getBookingsByUser(user.getId().toString());
-                if (response != null && response.getData() != null) {
-                    dto.setBookings(response.getData());
-                } else {
-                    log.warn("No bookings found for user {}", user.getId());
-                    dto.setBookings(Collections.emptyList());
-                }
-            } catch (Exception e) {
-                log.error("Failed to fetch bookings for user {}: {}", user.getId(), e.getMessage());
-                dto.setBookings(List.of(getDummyBookingDto("Booking service is down. Unable to fetch bookings.")));
-            }
-
-            try {
-                List<MovieDTO> movieDetails = new ArrayList<>();
-                if (user.getWatchlistMovieIds() != null) {
-                    for (String movieId : user.getWatchlistMovieIds()) {
-                        try {
-                            ApiResponse<MovieDTO> movieResponse = movieServiceClient.getMovieById(movieId);
-                            if (movieResponse != null && movieResponse.isSuccess() && movieResponse.getData() != null) {
-                                movieDetails.add(movieResponse.getData());
-                            }
-                        } catch (Exception ex) {
-                            log.error("Failed to fetch movie {} for user {}: {}", movieId, user.getId(), ex.getMessage());
-                        }
-                    }
-                }
-                dto.setWatchlistMovies(movieDetails);
-            } catch (Exception ex) {
-                log.error("MovieService down for user {}: {}", user.getId(), ex.getMessage());
-                dto.setWatchlistMovies(Collections.emptyList());
-            }
-
-            userDTOs.add(dto);
-        }
-
-        log.info("EXIT: getAllUsers() - Count: {}", userDTOs.size());
-        return userDTOs;
-    }
-
-    @Override
-    public UserDTO getUserById(UUID id) {
-        log.info("ENTRY: getUserById() - ID: {}", id);
-
-        User user = userRepo.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("User not found for ID: {}", id);
-                    return new ResourceNotFoundException("User not found");
-                });
-
-        UserDTO userDto = mapper.toDTO(user);
-
-        try {
-            ApiResponse<List<BookingDTO>> response = bookingServiceClient.getBookingsByUser(id.toString());
-            if (response != null && response.getData() != null) {
-                userDto.setBookings(response.getData());
-                log.info("Fetched {} bookings for user {}", response.getData().size(), id);
-            } else {
-                log.warn("No bookings returned for user {}", id);
-                userDto.setBookings(Collections.emptyList());
-            }
-        } catch (Exception e) {
-            log.error("Failed to fetch bookings for user {}: {}", id, e.getMessage());
-            userDto.setBookings(List.of(getDummyBookingDto("Booking service is down. Unable to fetch bookings.")));
-        }
-
-        try {
-            List<MovieDTO> movieDetails = new ArrayList<>();
-            if (user.getWatchlistMovieIds() != null) {
-                for (String movieId : user.getWatchlistMovieIds()) {
-                    try {
-                        ApiResponse<MovieDTO> movieResponse = movieServiceClient.getMovieById(movieId);
-                        if (movieResponse != null && movieResponse.isSuccess() && movieResponse.getData() != null) {
-                            movieDetails.add(movieResponse.getData());
-                        }
-                    } catch (Exception ex) {
-                        log.error("Failed to fetch movie {}: {}", movieId, ex.getMessage());
-                    }
-                }
-            }
-            userDto.setWatchlistMovies(movieDetails);
-        } catch (Exception ex) {
-            log.error("MovieService down for user {}: {}", id, ex.getMessage());
-            userDto.setWatchlistMovies(Collections.emptyList());
-        }
-
-        log.info("EXIT: getUserById() - Result: {}", userDto);
-        return userDto;
-    }
-
+  
     @Override
     public Optional<UserDTO> getUserByEmail(String email) {
         log.info("Looking up user by email: {}", email);

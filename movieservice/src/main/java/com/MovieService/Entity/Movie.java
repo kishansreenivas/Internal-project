@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.GenericGenerator;
-import com.MovieService.EnumType.MovieStatus;
+
+import com.MovieService.constants.MovieStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

@@ -13,4 +13,16 @@ public class AppMessages {
     public static final String MOVIE_ADDED_TO_WATCHLIST = "Movie added to watchlist";
     public static final String MOVIE_REMOVED_FROM_WATCHLIST = "Movie removed from watchlist";
     public static final String USER_LOGOUT_SUCCESS = "User logged out successfully";
+    
+    public static final String ENTRY_LOG_MESSAGE = "ENTRY: {}()";
+    public static final String EXIT_LOG_MESSAGE = "EXIT: {}() - Count: {}";
+    public static final String BOOKING_SERVICE_ERROR_MESSAGE = "Booking service is down. Unable to fetch bookings.";
+    public static final String MOVIE_SERVICE_ERROR_MESSAGE = "Movie service is down. Unable to fetch movie details.";
+    public static final String NO_BOOKINGS_FOUND_LOG_MESSAGE = "No bookings found for user {}";
+    public static final String NO_BOOKINGS_RETURNED_LOG_MESSAGE = "No bookings returned for user {}";
+    public static final String NO_MOVIES_FOUND_LOG_MESSAGE = "Failed to fetch movie {} for user {}: {}";
+    public static final String MOVIE_SERVICE_ERROR_LOG_MESSAGE = "MovieService down for user {}: {}";
+    public static final String USER_NOT_FOUND_LOG_MESSAGE = "User not found for ID: {}";
+    public static final String USER_NOT_FOUND_EMAIL_LOG_MESSAGE = "No user found with email: {}";
+    public static final String MOVIE_NOT_FOUND_LOG_MESSAGE = "Failed to fetch movie {}: {}";
 }
