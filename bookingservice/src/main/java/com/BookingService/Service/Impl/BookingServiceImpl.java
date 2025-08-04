@@ -1,6 +1,5 @@
 package com.BookingService.Service.Impl;
 
-
 import com.BookingService.Service.BookingService;
 import com.BookingService.payload.ApiResponse;
 import com.BookingService.Dto.*;
@@ -21,13 +20,16 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import jakarta.validation.*;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class BookingServiceImpl implements BookingService {
-    private static final Logger log = LoggerFactory.getLogger(BookingServiceImpl.class);
+   
     private static final Duration LOCK_DURATION = Duration.ofMinutes(10);
 
     @Autowired private BookingRepository bookingRepo;
@@ -35,13 +37,30 @@ public class BookingServiceImpl implements BookingService {
     @Autowired private UserClient userClient;
     @Autowired private MovieClient movieClient;
     @Autowired private ApplicationEventPublisher pub;
-    @Autowired
-    private ModelMapper modelMapper;
+    @Autowired private ModelMapper modelMapper;
 
     public BookingServiceImpl() {
         log.info(" BookingServiceImpl instantiated");
     }
 
+    /**
+     * Initiates a booking for the user with the specified details.
+     * <p>
+     * This method validates input parameters, checks for seat availability, 
+     * creates a new booking, and saves it to the repository. It also generates 
+     * a unique booking ID and associates the specified seats with the booking.
+     * </p>
+     *
+     * @param userId      The ID of the user initiating the booking.
+     * @param showId      The ID of the show for which the booking is made.
+     * @param screenId    The ID of the screen where the show will be played.
+     * @param seatIds     A list of seat IDs selected for booking.
+     * @param totalAmount The total amount to be paid for the booking.
+     * @return            The saved booking object containing the generated booking ID and associated seats.
+     * @throws NullPointerException      If any of the userId, showId, or screenId are null.
+     * @throws ConstraintViolationException If the seatIds list is empty or the totalAmount is non-positive.
+     * @throws SeatAlreadyBookedException If any of the selected seats are already booked or pending.
+     */
     @Override
     public Booking initiateBooking(String userId, String showId, String screenId,
                                    List<String> seatIds, double totalAmount) {
@@ -74,7 +93,22 @@ public class BookingServiceImpl implements BookingService {
         log.info("EXIT initiateBooking => saved bookingId={}", saved.getBookingId());
         return saved;
     }
-
+    
+    /**
+     * Confirms a booking by updating its status and associating it with a payment ID.
+     * <p>
+     * This method retrieves the booking by its ID, changes its status to confirmed, 
+     * associates the payment ID with the booking, and updates the status of all 
+     * associated seats to confirmed. A {@link BookingConfirmedEvent} is published 
+     * to notify that the booking has been confirmed. Finally, the updated booking 
+     * is saved to the repository.
+     * </p>
+     *
+     * @param bookingId The ID of the booking to be confirmed.
+     * @param paymentId The payment ID associated with the confirmed booking.
+     * @return          The updated booking with the confirmed status.
+     * @throws ResourceNotFoundException If the booking with the specified bookingId does not exist.
+     */
     @Override
     public Booking confirmBooking(String bookingId, String paymentId) {
         log.info("ENTRY confirmBooking(bookingId={}, paymentId={})", bookingId, paymentId);
@@ -91,7 +125,19 @@ public class BookingServiceImpl implements BookingService {
         log.info("EXIT confirmBooking => status={}", updated.getStatus());
         return updated;
     }
-
+    
+    /**
+     * Cancels an existing booking by updating its status and the status of all associated seats.
+     * <p>
+     * This method retrieves the booking by its ID, changes its status to cancelled, 
+     * and updates the status of all associated seats to cancelled. The updated booking 
+     * is then saved to the repository.
+     * </p>
+     *
+     * @param bookingId The ID of the booking to be cancelled.
+     * @return          The updated booking with the cancelled status.
+     * @throws ResourceNotFoundException If the booking with the specified bookingId does not exist.
+     */
     @Override
     public Booking cancelBooking(String bookingId) {
         log.warn("ENTRY cancelBooking(bookingId={})", bookingId);
@@ -115,7 +161,17 @@ public class BookingServiceImpl implements BookingService {
         seatRepo.saveAll(expired);
         log.info("EXIT releaseExpiredLocks => releasedCount={}", expired.size());
     }
-
+    
+    /**
+     * Releases expired seat locks by updating their status to FAILED.
+     * <p>
+     * This method identifies seats that are currently locked with the status {@link BookingStatus#PENDING} 
+     * and whose lock time has passed the defined expiration period. The status of these seats is updated to 
+     * {@link BookingStatus#FAILED}, and the changes are saved to the repository.
+     * </p>
+     *
+     * @throws None. This method does not throw any exceptions.
+     */
     @Override
     public List<BookedSeat> getSeatsByBookingId(String bookingId) {
         log.info("ENTRY getSeatsByBookingId({})", bookingId);
@@ -204,6 +260,4 @@ public class BookingServiceImpl implements BookingService {
         return dto;
     }
     
-  
-
 } 

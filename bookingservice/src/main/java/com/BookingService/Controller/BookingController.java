@@ -9,8 +9,7 @@ import com.BookingService.Dto.ShowtimeDto;
 import com.BookingService.Dto.UserDTO;
 import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
-
-import com.BookingService.Service.Impl.BookingServiceImpl;
+import com.BookingService.Service.BookingService;
 import com.BookingService.constants.BookingMessages;
 import com.BookingService.mapper.BookingMapper;
 import com.BookingService.payload.ApiResponse;
@@ -38,7 +37,7 @@ public class BookingController {
 
    
     @Autowired
-    private BookingServiceImpl bookingService;
+    private BookingService bookingService;
     
     @Autowired
     private BookingMapper bookingMapper;

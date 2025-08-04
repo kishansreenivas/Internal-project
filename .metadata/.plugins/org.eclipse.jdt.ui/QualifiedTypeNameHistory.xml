@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="com.apigateway.models.JwtRequest"/>
     <fullyQualifiedTypeName name="com.apigateway.models.JwtResponse"/>
     <fullyQualifiedTypeName name="springfox.documentation.swagger.web.SwaggerResource"/>
     <fullyQualifiedTypeName name="com.apigateway.constants.Constants"/>
@@ -60,4 +59,5 @@
     <fullyQualifiedTypeName name="com.UserService.Dto.MovieDto"/>
     <fullyQualifiedTypeName name="com.UserService.constants.MovieStatus"/>
     <fullyQualifiedTypeName name="com.UserService.constants.AppMessages"/>
+    <fullyQualifiedTypeName name="com.BookingService.Service.BookingService"/>
 </qualifiedTypeNameHistroy>

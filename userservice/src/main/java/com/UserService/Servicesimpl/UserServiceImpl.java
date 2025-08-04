@@ -69,6 +69,21 @@ public class UserServiceImpl implements UserService, Serializable {
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(5);
     
+    /**
+     * Retrieves all users and their associated data, including bookings and watchlist movies.
+     * <p>
+     * This method fetches all users from the repository, converts them to {@link UserDTO} objects, 
+     * and attempts to enrich each user's data with their bookings and watchlist movies by calling 
+     * external services (booking and movie services). If no bookings or movies are found, 
+     * default values are provided. If an error occurs while fetching bookings or movies, 
+     * the method logs the error and sets default or empty values accordingly.
+     * </p>
+     *
+     * @return A list of {@link UserDTO} objects, each containing user data along with their associated 
+     *         bookings and watchlist movies.
+     * @throws None. This method does not throw any checked exceptions, but may log errors if external 
+     *         service calls fail.
+     */
     @Override
     public List<UserDTO> getAllUsers() {
     	  log.info(AppMessages.ENTRY_LOG_MESSAGE, "getAllUsers");
@@ -119,6 +134,19 @@ public class UserServiceImpl implements UserService, Serializable {
         return userDTOs;
     }
 
+    /**
+     * Retrieves a user by their ID and enriches the user data with their associated bookings and watchlist movies.
+     * <p>
+     * This method fetches a user by their unique ID from the repository and converts it to a {@link UserDTO}. 
+     * It then attempts to fetch the user's bookings and watchlist movies from external services. If bookings or 
+     * movies are not found, or if any error occurs during the external service calls, the method logs the error 
+     * and returns default or empty values. The final {@link UserDTO} is then returned.
+     * </p>
+     *
+     * @param id The unique ID of the user to retrieve.
+     * @return   A {@link UserDTO} object containing the user's data, along with their associated bookings and watchlist movies.
+     * @throws ResourceNotFoundException If the user with the specified ID does not exist in the repository.
+     */
     @Override
     public UserDTO getUserById(UUID id) {
         log.info(AppMessages.ENTRY_LOG_MESSAGE, id);
@@ -169,7 +197,20 @@ public class UserServiceImpl implements UserService, Serializable {
         return userDto;
     }
 
-
+    /**
+     * Creates a new user based on the provided {@link UserDTO} and persists it to the repository.
+     * <p>
+     * This method validates the provided {@link UserDTO}, logs its details, performs file I/O to log user creation,
+     * and saves the user entity after encoding the password. The method also logs method execution asynchronously 
+     * without blocking the main flow. In case of any exceptions during the process, an appropriate error message 
+     * is logged, and a runtime exception is thrown.
+     * </p>
+     *
+     * @param dto The {@link UserDTO} object containing the user's details to be created.
+     * @return    The saved {@link UserDTO} object after the user has been created and persisted.
+     * @throws IllegalArgumentException If the provided {@link UserDTO} is null.
+     * @throws RuntimeException If there is an I/O error during logging or any other unexpected error during user creation.
+     */
     @Override
     public UserDTO createUser(UserDTO dto) {
         log.info("ENTRY: createUser() - DTO: {}", dto);
@@ -218,6 +259,21 @@ public class UserServiceImpl implements UserService, Serializable {
         }
     }
 
+    /**
+     * Updates an existing user's details based on the provided {@link UserDTO}.
+     * <p>
+     * This method retrieves the user by their unique ID, updates the user's personal details 
+     * (name, email, phone, and password), and clears the existing addresses before adding the new ones 
+     * from the provided DTO. The updated user is then saved and returned as a {@link UserDTO}.
+     * The method is wrapped in a transaction to ensure atomicity of the update process.
+     * </p>
+     *
+     * @param id  The unique ID of the user to be updated.
+     * @param dto The {@link UserDTO} object containing the updated user details.
+     * @return    The updated {@link UserDTO} object.
+     * @throws ResourceNotFoundException If the user with the specified ID does not exist.
+     * @throws IllegalArgumentException If the provided {@link UserDTO} contains invalid data (e.g., null fields).
+     */
     @Override
     @Transactional
     public UserDTO updateUser(UUID id, UserDTO dto) {
@@ -249,7 +305,17 @@ public class UserServiceImpl implements UserService, Serializable {
         log.info("EXIT: updateUser() - Updated User: {}", result);
         return result;
     }
-
+    
+    /**
+     * Deletes an existing user based on the provided user ID.
+     * <p>
+     * This method retrieves the user by their unique ID and deletes the user from the repository. 
+     * If the user with the specified ID is not found, a {@link ResourceNotFoundException} is thrown.
+     * </p>
+     *
+     * @param id The unique ID of the user to be deleted.
+     * @throws ResourceNotFoundException If the user with the specified ID does not exist.
+     */
     @Override
     public void deleteUser(UUID id) {
         log.info("ENTRY: deleteUser() - ID: {}", id);

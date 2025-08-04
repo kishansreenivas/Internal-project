@@ -2,7 +2,7 @@ package com.BookingService.constants;
 
 public class BookingMessages {
 
-    // ✅ Success Messages
+    //  Success Messages
     public static final String BOOKING_INITIATED_SUCCESS = "Booking initiated successfully";
     public static final String BOOKING_CONFIRMED_SUCCESS = "Booking confirmed";
     public static final String BOOKING_CANCELLED_SUCCESS = "Booking cancelled";
@@ -17,7 +17,7 @@ public class BookingMessages {
     public static final String USER_PROFILE_FETCHED = "User profile fetched";
     public static final String USER_BOOKINGS_FETCHED = "Bookings fetched";
 
-    // ❌ Error Messages
+    //  Error Messages
     public static final String BOOKING_INITIATION_FAILED = "Failed to initiate booking";
     public static final String BOOKING_CONFIRMATION_FAILED = "Booking confirmation failed";
     public static final String BOOKING_CANCELLATION_FAILED = "Failed to cancel booking";
