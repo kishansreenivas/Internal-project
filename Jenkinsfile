@@ -17,7 +17,7 @@ pipeline {
                 script {
                     // Cloning the Git repository
                     echo "Cloning repository..."
-                    git url: 'git@github.com:Sumeet-khandale/Internal-project.git', credentialsId: 'your-credentials-id'
+                    git url: 'git@github.com:Sumeet-khandale/Internal-project.git'
                 }
             }
         }
