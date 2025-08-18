@@ -53,11 +53,11 @@
     <fullyQualifiedTypeName name="com.UserService.Controller.PaymentMethodController"/>
     <fullyQualifiedTypeName name="com.UserService.constants.Role"/>
     <fullyQualifiedTypeName name="com.UserService.constants.BookingStatus"/>
-    <fullyQualifiedTypeName name="lombok.extern.slf4j.Slf4j"/>
     <fullyQualifiedTypeName name="lombok.Data"/>
     <fullyQualifiedTypeName name="com.BookingService.constants.BookingMessages"/>
     <fullyQualifiedTypeName name="com.UserService.Dto.MovieDto"/>
     <fullyQualifiedTypeName name="com.UserService.constants.MovieStatus"/>
     <fullyQualifiedTypeName name="com.UserService.constants.AppMessages"/>
     <fullyQualifiedTypeName name="com.BookingService.Service.BookingService"/>
+    <fullyQualifiedTypeName name="lombok.extern.slf4j.Slf4j"/>
 </qualifiedTypeNameHistroy>

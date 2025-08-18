@@ -8,11 +8,13 @@
 	<section name="java.lang.Class">
 		<item key="replaceBarOpen" value="true"/>
 		<list key="findhistory">
+			<item value="mapper"/>
 			<item value="MovieDTO"/>
 			<item value="MovieDto"/>
 			<item value="run"/>
 		</list>
 		<list key="replacehistory">
+			<item value="usermapper"/>
 			<item value="MovieDto"/>
 			<item value="MovieDTo"/>
 		</list>

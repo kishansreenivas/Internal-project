@@ -475,17 +475,6 @@ public class UserServiceImpl implements UserService, Serializable {
                              .map(mapper::toDTO);
     }
 
-    private BookingDTO getDummyBookingDto(String message) {
-        BookingDTO dummy = new BookingDTO();
-        dummy.setBookingId(message);
-        dummy.setShowId("N/A");
-        dummy.setScreenId("N/A");
-        dummy.setBookingTime(null);
-        dummy.setPaymentId("N/A");
-        dummy.setTotalAmount(0.0);
-        dummy.setStatus(BookingStatus.CANCELLED);
-        return dummy;
-    }
 
     public void inspectUserFields() {
         try {
@@ -524,4 +513,17 @@ public class UserServiceImpl implements UserService, Serializable {
             return false;
         }
     }
+    
+    private BookingDTO getDummyBookingDto(String message) {
+        BookingDTO dummy = new BookingDTO();
+        dummy.setBookingId(message);
+        dummy.setShowId("N/A");
+        dummy.setScreenId("N/A");
+        dummy.setBookingTime(null);
+        dummy.setPaymentId("N/A");
+        dummy.setTotalAmount(0.0);
+        dummy.setStatus(BookingStatus.CANCELLED);
+        return dummy;
+    }
+
 }
