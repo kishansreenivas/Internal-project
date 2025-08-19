@@ -1,6 +1,5 @@
-
-  pipeline {
-    agent any
+pipeline {
+    agent { label 'master' }  // ensure it runs on master node
 
     stages {
         stage('Checkout Code') {
@@ -10,27 +9,54 @@
                     url: 'https://github.com/Sumeet-khandale/Internal-project.git'
             }
         }
-stage('Build All Microservices') {
-    parallel {
-        stage('userservice') {
-            agent { label 'master' }
-            steps {
-                dir('userservice') {
-                    sh './mvnw clean install -DskipTests'
+
+        stage('Build All Microservices') {
+            parallel {
+                stage('User Service') {
+                    steps {
+                        dir('user-service') {   // adjust folder name if different
+                            sh 'mvn clean install -DskipTests'
+                        }
+                    }
+                }
+                stage('Movie Service') {
+                    steps {
+                        dir('movie-service') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                    }
+                }
+                stage('Booking Service') {
+                    steps {
+                        dir('booking-service') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                    }
+                }
+                stage('Payment Service') {
+                    steps {
+                        dir('payment-service') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                    }
+                }
+                stage('Notification Service') {
+                    steps {
+                        dir('notification-service') {
+                            sh 'mvn clean install -DskipTests'
+                        }
+                    }
                 }
             }
         }
-        // same for other services...
-    }
-}
     }
 
     post {
         success {
-            echo "Code fetched successfully from GitHub!"
+            echo "✅ Build completed successfully!"
         }
         failure {
-            echo "Failed to fetch code from GitHub!"
+            echo "❌ Build failed. Check logs!"
         }
     }
 }
