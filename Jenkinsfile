@@ -10,13 +10,14 @@ pipeline {
             }
         }
 
-        stage('Build User Service') {
-            steps {
-                dir('user-service') {
-                    sh 'mvn clean install -DskipTests'
-                }
-            }
+      stage('User Service') {
+    steps {
+        dir('USER-SERVICE') {   // must match repo exactly
+            sh 'mvn clean install -DskipTests'
         }
+    }
+}
+
     }
 
     post {
