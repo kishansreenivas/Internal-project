@@ -10,13 +10,19 @@
                     url: 'https://github.com/Sumeet-khandale/Internal-project.git'
             }
         }
-      stage('Build userservice') {
+stage('Build All Microservices') {
+    parallel {
+        stage('userservice') {
+            agent { label 'master' }
             steps {
                 dir('userservice') {
                     sh './mvnw clean install -DskipTests'
                 }
             }
         }
+        // same for other services...
+    }
+}
     }
 
     post {
