@@ -10,6 +10,13 @@
                     url: 'https://github.com/Sumeet-khandale/Internal-project.git'
             }
         }
+      stage('Build userservice') {
+            steps {
+                dir('userservice') {
+                    sh './mvnw clean install -DskipTests'
+                }
+            }
+        }
     }
 
     post {
