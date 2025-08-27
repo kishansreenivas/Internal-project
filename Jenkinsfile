@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'OpenJDK 21'
-        maven 'Maven 3.9.11'
+        jdk 'OpenJDK 21'        // Jenkins will automatically install OpenJDK 21
+        maven 'Maven 3.9.11'    // Jenkins will automatically install Maven 3.9.11
     }
 
     stages {
@@ -17,17 +17,20 @@ pipeline {
             steps {
                 dir('userservice') {
                     script {
-                        def javaHomePath = tool 'OpenJDK 21'
-                        def mavenHomePath = tool 'Maven 3.9.11'
-                        withEnv([
-                            "JAVA_HOME=${javaHomePath}",
-                            "PATH=${javaHomePath}\\bin;${mavenHomePath}\\bin;${env.PATH}"
-                        ]) {
-                            bat 'mvn clean install'
-                        }
+                        // The tools will automatically be available based on the configuration
+                        bat 'mvn clean install'
                     }
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
