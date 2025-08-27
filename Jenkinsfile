@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         jdk 'OpenJDK 21'          // Must match the JDK name in Jenkins > Global Tool Configuration
-        maven 'Maven 3.9.6'       // Must match the Maven installation name in Jenkins
+        maven 'Maven 3.9.11'       // Must match the Maven installation name in Jenkins
     }
 
     environment {
@@ -26,7 +26,8 @@ pipeline {
             steps {
                 dir('userservice') {
                     echo "🛠️ Building USER-SERVICE with Maven..."
-                    sh 'mvn clean install -DskipTests=false'   // Set -DskipTests=true to skip tests
+                    bat 'mvn clean install'
+
                 }
             }
         }
