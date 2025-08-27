@@ -228,11 +228,11 @@ public class UserServiceImpl implements UserService, Serializable {
             }
 
             // File I/O 
-            Path userDir = Paths.get("C://Documents//Simple//SpringBoot//File//createusers.txt");
+            Path userDir = Paths.get("C://Users//167572//OneDrive - Arrow Electronics, Inc//Documents//Simple//springboot//File//createusers.txt");
             if (!Files.exists(userDir)) {
                 Files.createDirectories(userDir);
             }
-            FileWriter writer = new FileWriter(userDir.resolve("C://Documents//Simple//SpringBoot//File//createuser.txt").toFile(), true);
+            FileWriter writer = new FileWriter(userDir.resolve("C://Users//167572//OneDrive - Arrow Electronics, Inc//Documents//Simple//springboot//File//createuser.txt").toFile(), true);
             writer.write("username: " + dto.getEmail() + System.lineSeparator());
             writer.close();
 

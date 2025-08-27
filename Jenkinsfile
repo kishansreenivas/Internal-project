@@ -18,7 +18,7 @@ pipeline {
                 dir('userservice') {
                     script {
                         // The tools will automatically be available based on the configuration
-                       bat 'mvn clean install -X'
+                       bat 'mvn clean install'
                     }
                 }
             }
