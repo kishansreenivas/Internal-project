@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'OpenJDK 21'        // Jenkins will automatically install OpenJDK 21
-        maven 'Maven 3.9.11'    // Jenkins will automatically install Maven 3.9.11
+        jdk 'OpenJDK 21'
+        maven 'Maven 3.9.11'
     }
 
     stages {
@@ -15,25 +15,25 @@ pipeline {
 
         stage('Build All Microservices') {
             parallel {
-                stage('User Service') {
+                stage('Build USER-SERVICE') {
                     steps {
-                        dir('user-service') {
+                        dir('userservice') {
                             bat 'mvn clean install'
                         }
                     }
                 }
 
-                stage('Movie Service') {
+                stage('Build MOVIE-SERVICE') {
                     steps {
-                        dir('movie-service') {
+                        dir('movieservice') {
                             bat 'mvn clean install'
                         }
                     }
                 }
 
-                stage('Booking Service') {
+                stage('Build BOOKING-SERVICE') {
                     steps {
-                        dir('booking-service') {
+                        dir('bookingservice') {
                             bat 'mvn clean install'
                         }
                     }
