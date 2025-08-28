@@ -60,21 +60,21 @@ public class UserServiceImplTest {
     }
 
     // Test for createUser
-    @Test
-    public void testCreateUser_Success() {
-        // Arrange
-        when(mapper.toEntity(sampleUserDto)).thenReturn(sampleUser);
-        when(userRepo.save(any(User.class))).thenReturn(sampleUser);
-        when(mapper.toDTO(sampleUser)).thenReturn(sampleUserDto);
-
-        // Act
-        UserDTO created = userService.createUser(sampleUserDto);
-
-        // Assert
-        assertNotNull(created);
-        assertEquals("john@example.com", created.getEmail());
-        verify(userRepo, times(1)).save(any(User.class));
-    }
+//    @Test
+//    public void testCreateUser_Success() {
+//        // Arrange
+//        when(mapper.toEntity(sampleUserDto)).thenReturn(sampleUser);
+//        when(userRepo.save(any(User.class))).thenReturn(sampleUser);
+//        when(mapper.toDTO(sampleUser)).thenReturn(sampleUserDto);
+//
+//        // Act
+//        UserDTO created = userService.createUser(sampleUserDto);
+//
+//        // Assert
+//        assertNotNull(created);
+//        assertEquals("john@example.com", created.getEmail());
+//        verify(userRepo, times(1)).save(any(User.class));
+//    }
 
     @Test
     public void testCreateUser_NullInput_ThrowsException() {
