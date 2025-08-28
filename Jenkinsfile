@@ -38,6 +38,28 @@ pipeline {
                         }
                     }
                 }
+             stage('Build PAYMENT-SERVICE') {
+                    steps {
+                        dir('paymentservice') {
+                            bat 'mvn clean install'
+                        }
+                    }
+                }
+            stage('Build NOTIFICATION-SERVICE') {
+                    steps {
+                        dir('notificationservice') {
+                            bat 'mvn clean install'
+                        }
+                    }
+                }
+        stage('Build SERVICE-REGISTRY') {
+                    steps {
+                        dir('ServiceRegistry') {
+                            bat 'mvn clean install'
+                        }
+                    }
+                }
+
             }
         }
     }

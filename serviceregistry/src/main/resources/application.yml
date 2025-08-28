@@ -11,7 +11,7 @@ eureka:
 
 spring:
   application:
-    name: ServiceRegistry
+    name: SERVICE-REGISTRY
   cloud:
     compatibility-verifier:
       enabled: false
