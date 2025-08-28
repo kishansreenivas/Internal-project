@@ -18,11 +18,7 @@ pipeline {
                 dir('userservice') {
                     script {
                         // The tools will automatically be available based on the configuration
-<<<<<<< HEAD
-                       bat 'mvn clean install'
-=======
-                       bat 'mvn clean install '
->>>>>>> 60ce08121f0e6bf9c4fa74540d87d33f27100fe3
+                        bat 'mvn clean install'
                     }
                 }
             }
