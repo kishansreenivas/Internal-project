@@ -8,15 +8,13 @@ import com.BookingService.Entities.BookedSeat;
 import com.BookingService.Entities.Booking;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class BookingResponse {
 
 	private String bookingId;
