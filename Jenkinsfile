@@ -13,12 +13,29 @@ pipeline {
             }
         }
 
-        stage('Build USER-SERVICE') {
-            steps {
-                dir('userservice') {
-                    script {
-                        // The tools will automatically be available based on the configuration
-                        bat 'mvn clean install'
+        stage('Build All Microservices') {
+            parallel {
+                stage('User Service') {
+                    steps {
+                        dir('user-service') {
+                            bat 'mvn clean install'
+                        }
+                    }
+                }
+
+                stage('Movie Service') {
+                    steps {
+                        dir('movie-service') {
+                            bat 'mvn clean install'
+                        }
+                    }
+                }
+
+                stage('Booking Service') {
+                    steps {
+                        dir('booking-service') {
+                            bat 'mvn clean install'
+                        }
                     }
                 }
             }
