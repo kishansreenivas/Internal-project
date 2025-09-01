@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'openJDK 21'       
-        maven '3.9.11'         
+        jdk 'openJDK 21'
+        maven '3.9.11'
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
                 stage('Build USER-SERVICE') {
                     steps {
                         dir('userservice') {
-                            bat 'mvn clean install' // Change to `sh` if on Linux
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -26,7 +26,7 @@ pipeline {
                 stage('Build MOVIE-SERVICE') {
                     steps {
                         dir('movieservice') {
-                            bat 'mvn clean install'
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -34,7 +34,7 @@ pipeline {
                 stage('Build BOOKING-SERVICE') {
                     steps {
                         dir('bookingservice') {
-                            bat 'mvn clean install'
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -42,7 +42,7 @@ pipeline {
                 stage('Build PAYMENT-SERVICE') {
                     steps {
                         dir('paymentservice') {
-                            bat 'mvn clean install'
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -50,7 +50,7 @@ pipeline {
                 stage('Build NOTIFICATION-SERVICE') {
                     steps {
                         dir('notificationservice') {
-                            bat 'mvn clean install'
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -58,7 +58,7 @@ pipeline {
                 stage('Build SERVICE-REGISTRY') {
                     steps {
                         dir('ServiceRegistry') {
-                            bat 'mvn clean install'
+                            sh 'mvn clean install'
                         }
                     }
                 }
