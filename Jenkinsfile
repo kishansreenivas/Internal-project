@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     tools {
-        jdk 'OpenJDK 21'
-        maven 'Maven 3.9.11'
-    }
+    jdk 'openJDK 21'       
+    maven '3.9.11'         
+}
 
     stages {
         stage('Checkout Code') {
