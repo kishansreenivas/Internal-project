@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     tools {
-    jdk 'openJDK 21'       
-    maven '3.9.11'         
-}
+        jdk 'openJDK 21'       
+        maven '3.9.11'         
+    }
 
     stages {
         stage('Checkout Code') {
@@ -18,7 +18,7 @@ pipeline {
                 stage('Build USER-SERVICE') {
                     steps {
                         dir('userservice') {
-                            bat 'mvn clean install'
+                            bat 'mvn clean install' // Change to `sh` if on Linux
                         }
                     }
                 }
@@ -38,38 +38,40 @@ pipeline {
                         }
                     }
                 }
-             stage('Build PAYMENT-SERVICE') {
+
+                stage('Build PAYMENT-SERVICE') {
                     steps {
                         dir('paymentservice') {
                             bat 'mvn clean install'
                         }
                     }
                 }
-            stage('Build NOTIFICATION-SERVICE') {
+
+                stage('Build NOTIFICATION-SERVICE') {
                     steps {
                         dir('notificationservice') {
                             bat 'mvn clean install'
                         }
                     }
                 }
-        stage('Build SERVICE-REGISTRY') {
+
+                stage('Build SERVICE-REGISTRY') {
                     steps {
                         dir('ServiceRegistry') {
                             bat 'mvn clean install'
                         }
                     }
                 }
-
             }
         }
     }
 
     post {
         success {
-            echo 'Build succeeded!'
+            echo '✅ Build succeeded!'
         }
         failure {
-            echo 'Build failed!'
+            echo '❌ Build failed!'
         }
     }
 }
