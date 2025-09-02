@@ -6,14 +6,17 @@ pipeline {
         maven '3.9.11'
     }
 
+    environment {
+        JAVA_HOME = tool name: 'openJDK 21', type: 'jdk'
+        PATH = "${JAVA_HOME}/bin:${env.PATH}"
+    }
+
     stages {
-        stage('Verify Environment') {
+        stage('Verify Java and Maven') {
             steps {
-                sh '''
-                    echo "JAVA_HOME: $JAVA_HOME"
-                    $JAVA_HOME/bin/java -version
-                    mvn -version
-                '''
+                sh 'echo "Using JAVA_HOME=$JAVA_HOME"'
+                sh 'java -version'
+                sh 'mvn -version'
             }
         }
 
@@ -28,65 +31,42 @@ pipeline {
                 stage('Build USER-SERVICE') {
                     steps {
                         dir('userservice') {
-                            sh '''
-                                $JAVA_HOME/bin/java -version
-                                mvn clean install
-                            '''
+                            sh 'mvn clean install'
                         }
                     }
                 }
-
                 stage('Build MOVIE-SERVICE') {
                     steps {
                         dir('movieservice') {
-                            sh '''
-                                $JAVA_HOME/bin/java -version
-                                mvn clean install
-                            '''
+                            sh 'mvn clean install'
                         }
                     }
                 }
-
                 stage('Build BOOKING-SERVICE') {
                     steps {
                         dir('bookingservice') {
-                            sh '''
-                                $JAVA_HOME/bin/java -version
-                                mvn clean install
-                            '''
+                            sh 'mvn clean install'
                         }
                     }
                 }
-
                 stage('Build PAYMENT-SERVICE') {
                     steps {
                         dir('paymentservice') {
-                            sh '''
-                                $JAVA_HOME/bin/java -version
-                                mvn clean install
-                            '''
+                            sh 'mvn clean install'
                         }
                     }
                 }
-
                 stage('Build NOTIFICATION-SERVICE') {
                     steps {
                         dir('notificationservice') {
-                            sh '''
-                                $JAVA_HOME/bin/java -version
-                                mvn clean install
-                            '''
+                            sh 'mvn clean install'
                         }
                     }
                 }
-
                 stage('Build SERVICE-REGISTRY') {
                     steps {
                         dir('ServiceRegistry') {
-                            sh '''
-                                $JAVA_HOME/bin/java -version
-                                mvn clean install
-                            '''
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -103,4 +83,3 @@ pipeline {
         }
     }
 }
-
