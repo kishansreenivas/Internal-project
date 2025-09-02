@@ -6,61 +6,89 @@ pipeline {
         maven '3.9.11'
     }
 
-    environment {
-        MAVEN_OPTS = "-Xmx512m"
-    }
-
     stages {
+        stage('Verify Environment') {
+            steps {
+                sh '''
+                    echo "JAVA_HOME: $JAVA_HOME"
+                    $JAVA_HOME/bin/java -version
+                    mvn -version
+                '''
+            }
+        }
+
         stage('Checkout Code') {
             steps {
                 git url: 'https://github.com/Sumeet-khandale/Internal-project.git'
             }
         }
 
-        stage('Build USER-SERVICE') {
-            steps {
-                dir('userservice') {
-                    sh 'mvn -B clean install'
+        stage('Build All Microservices') {
+            parallel {
+                stage('Build USER-SERVICE') {
+                    steps {
+                        dir('userservice') {
+                            sh '''
+                                $JAVA_HOME/bin/java -version
+                                mvn clean install
+                            '''
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Build MOVIE-SERVICE') {
-            steps {
-                dir('movieservice') {
-                    sh 'mvn -B clean install'
+                stage('Build MOVIE-SERVICE') {
+                    steps {
+                        dir('movieservice') {
+                            sh '''
+                                $JAVA_HOME/bin/java -version
+                                mvn clean install
+                            '''
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Build BOOKING-SERVICE') {
-            steps {
-                dir('bookingservice') {
-                    sh 'mvn -B clean install'
+                stage('Build BOOKING-SERVICE') {
+                    steps {
+                        dir('bookingservice') {
+                            sh '''
+                                $JAVA_HOME/bin/java -version
+                                mvn clean install
+                            '''
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Build PAYMENT-SERVICE') {
-            steps {
-                dir('paymentservice') {
-                    sh 'mvn -B clean install'
+                stage('Build PAYMENT-SERVICE') {
+                    steps {
+                        dir('paymentservice') {
+                            sh '''
+                                $JAVA_HOME/bin/java -version
+                                mvn clean install
+                            '''
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Build NOTIFICATION-SERVICE') {
-            steps {
-                dir('notificationservice') {
-                    sh 'mvn -B clean install'
+                stage('Build NOTIFICATION-SERVICE') {
+                    steps {
+                        dir('notificationservice') {
+                            sh '''
+                                $JAVA_HOME/bin/java -version
+                                mvn clean install
+                            '''
+                        }
+                    }
                 }
-            }
-        }
 
-        stage('Build SERVICE-REGISTRY') {
-            steps {
-                dir('ServiceRegistry') {
-                    sh 'mvn -B clean install'
+                stage('Build SERVICE-REGISTRY') {
+                    steps {
+                        dir('ServiceRegistry') {
+                            sh '''
+                                $JAVA_HOME/bin/java -version
+                                mvn clean install
+                            '''
+                        }
+                    }
                 }
             }
         }
@@ -75,3 +103,4 @@ pipeline {
         }
     }
 }
+
