@@ -6,6 +6,10 @@ pipeline {
         maven '3.9.11'
     }
 
+    environment {
+        MAVEN_OPTS = "-Xmx512m"
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -13,54 +17,50 @@ pipeline {
             }
         }
 
-        stage('Build All Microservices') {
-            parallel {
-                stage('Build USER-SERVICE') {
-                    steps {
-                        dir('userservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
+        stage('Build USER-SERVICE') {
+            steps {
+                dir('userservice') {
+                    sh 'mvn -B clean install'
                 }
+            }
+        }
 
-                stage('Build MOVIE-SERVICE') {
-                    steps {
-                        dir('movieservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
+        stage('Build MOVIE-SERVICE') {
+            steps {
+                dir('movieservice') {
+                    sh 'mvn -B clean install'
                 }
+            }
+        }
 
-                stage('Build BOOKING-SERVICE') {
-                    steps {
-                        dir('bookingservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
+        stage('Build BOOKING-SERVICE') {
+            steps {
+                dir('bookingservice') {
+                    sh 'mvn -B clean install'
                 }
+            }
+        }
 
-                stage('Build PAYMENT-SERVICE') {
-                    steps {
-                        dir('paymentservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
+        stage('Build PAYMENT-SERVICE') {
+            steps {
+                dir('paymentservice') {
+                    sh 'mvn -B clean install'
                 }
+            }
+        }
 
-                stage('Build NOTIFICATION-SERVICE') {
-                    steps {
-                        dir('notificationservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
+        stage('Build NOTIFICATION-SERVICE') {
+            steps {
+                dir('notificationservice') {
+                    sh 'mvn -B clean install'
                 }
+            }
+        }
 
-                stage('Build SERVICE-REGISTRY') {
-                    steps {
-                        dir('ServiceRegistry') {
-                            sh 'mvn clean install'
-                        }
-                    }
+        stage('Build SERVICE-REGISTRY') {
+            steps {
+                dir('ServiceRegistry') {
+                    sh 'mvn -B clean install'
                 }
             }
         }
