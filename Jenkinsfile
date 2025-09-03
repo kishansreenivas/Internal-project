@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -22,56 +23,49 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
+                // Optional: clean old workspace to reduce load
+                deleteDir()
                 git url: 'https://github.com/Sumeet-khandale/Internal-project.git'
             }
         }
 
-        stage('Build All Microservices') {
-            parallel {
-                stage('Build USER-SERVICE') {
-                    steps {
-                        dir('userservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-                stage('Build MOVIE-SERVICE') {
-                    steps {
-                        dir('movieservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-                stage('Build BOOKING-SERVICE') {
-                    steps {
-                        dir('bookingservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-                stage('Build PAYMENT-SERVICE') {
-                    steps {
-                        dir('paymentservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-                stage('Build NOTIFICATION-SERVICE') {
-                    steps {
-                        dir('notificationservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-                stage('Build SERVICE-REGISTRY') {
-                    steps {
-                        dir('ServiceRegistry') {
-                            sh 'mvn clean install'
+        stage('Build Microservices (Sequential)') {
+            steps {
+                script {
+                    def services = ['userservice', 'movieservice', 'bookingservice'] // ✅ only 3 for now
+
+                    for (service in services) {
+                        echo "🔧 Building ${service}..."
+                        dir(service) {
+                            timeout(time: 7, unit: 'MINUTES') {
+                                sh 'mvn --batch-mode clean install'
+                            }
                         }
                     }
                 }
             }
         }
+
+        // Optional: You can add more services in another stage if needed
+        // Or manually rotate them depending on use case
+        /*
+        stage('Build Remaining Services') {
+            steps {
+                script {
+                    def services = ['paymentservice', 'notificationservice', 'ServiceRegistry']
+
+                    for (service in services) {
+                        echo "🔧 Building ${service}..."
+                        dir(service) {
+                            timeout(time: 7, unit: 'MINUTES') {
+                                sh 'mvn --batch-mode clean install'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        */
     }
 
     post {
