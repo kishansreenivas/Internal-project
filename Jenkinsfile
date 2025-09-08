@@ -2,97 +2,37 @@ pipeline {
     agent any
 
     tools {
-        jdk 'OpenJDK 21'
-        maven 'Maven 3.9.11'
+        jdk 'jdk21'       // 🔧 Make sure this JDK is configured in Jenkins
+        maven 'maven3'    // 🔧 Optional, if Maven is configured by name
     }
 
-    options {
-        ansiColor('xterm')
-        timestamps()
+    environment {
+        MAVEN_OPTS = "-Xmx1024m"
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Verify Java Version') {
             steps {
-                git 'https://github.com/kishansreenivas/Internal-project.git'
+                sh 'java -version'
+                sh 'mvn -version'
             }
         }
 
-        stage('Build All Microservices') {
-            parallel {
-                stage('Build USER-SERVICE') {
-                    steps {
-                        dir('userservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-
-                stage('Build MOVIE-SERVICE') {
-                    steps {
-                        dir('movieservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-
-                stage('Build BOOKING-SERVICE') {
-                    steps {
-                        dir('bookingservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-
-                stage('Build PAYMENT-SERVICE') {
-                    steps {
-                        dir('paymentservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-
-                stage('Build NOTIFICATION-SERVICE') {
-                    steps {
-                        dir('notificationservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-
-                stage('Build SERVICE-REGISTRY') {
-                    steps {
-                        dir('serviceregistry') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-
-                stage('Build API-GATEWAY') {
-                    steps {
-                        dir('apigateway') {
-                            sh 'mvn clean install'
-                        }
-                    }
-                }
-
-                stage('Build CONFIG-SERVICE') {
-                    steps {
-                        dir('configservice') {
-                            sh 'mvn clean install'
-                        }
-                    }
+        stage('Build Movie Service') {
+            steps {
+                dir('movie-service') {
+                    sh 'mvn clean install'
                 }
             }
         }
     }
 
     post {
-        success {
-            echo '✅ Build succeeded!'
-        }
         failure {
             echo '❌ Build failed!'
+        }
+        success {
+            echo '✅ Build successful!'
         }
     }
 }
