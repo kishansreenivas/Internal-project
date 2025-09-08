@@ -62,7 +62,7 @@ pipeline {
 
                 stage('Build SERVICE-REGISTRY') {
                     steps {
-                        dir('serviceregistry') {  // fixed folder name here
+                        dir('serviceregistry') {
                             sh 'mvn clean install'
                         }
                     }
