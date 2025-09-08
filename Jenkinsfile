@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                  git'https://github.com/kishansreenivas/Internal-project.git
+                git 'https://github.com/kishansreenivas/Internal-project.git'
             }
         }
 
@@ -26,7 +26,7 @@ pipeline {
                 stage('Build MOVIE-SERVICE') {
                     steps {
                         dir('movieservice') {
-                           sh 'mvn clean install'
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -38,53 +38,56 @@ pipeline {
                         }
                     }
                 }
-             stage('Build PAYMENT-SERVICE') {
+
+                stage('Build PAYMENT-SERVICE') {
                     steps {
                         dir('paymentservice') {
                             sh 'mvn clean install'
                         }
                     }
                 }
-            stage('Build NOTIFICATION-SERVICE') {
+
+                stage('Build NOTIFICATION-SERVICE') {
                     steps {
                         dir('notificationservice') {
                             sh 'mvn clean install'
                         }
                     }
                 }
-        stage('Build SERVICE-REGISTRY') {
+
+                stage('Build SERVICE-REGISTRY') {
                     steps {
                         dir('ServiceRegistry') {
                             sh 'mvn clean install'
                         }
                     }
                 }
-        stage('Build API-GATEWAY') {
+
+                stage('Build API-GATEWAY') {
                     steps {
                         dir('apigateway') {
                             sh 'mvn clean install'
                         }
                     }
-                }  
-    
-		stage('Build CONFIG-SERVICE') {
+                }
+
+                stage('Build CONFIG-SERVICE') {
                     steps {
                         dir('configservice') {
                             sh 'mvn clean install'
                         }
                     }
-                }   
-
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Build succeeded!'
+            echo '✅ Build succeeded!'
         }
         failure {
-            echo 'Build failed!'
+            echo '❌ Build failed!'
         }
     }
 }
