@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'OpenJDK 21'          // Make sure this exact name exists in Jenkins Global Tool Config
-        maven 'Maven 3.9.11'      // Make sure this exact name exists in Jenkins Global Tool Config
+        jdk 'OpenJDK 21'
+        maven 'Maven 3.9.11'
     }
 
     options {
@@ -12,26 +12,9 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
-            steps {
-                cleanWs()  // Clean any previous builds to avoid stale files
-            }
-        }
-
         stage('Checkout Code') {
             steps {
                 git 'https://github.com/kishansreenivas/Internal-project.git'
-                // Debug: list files at root and inside ServiceRegistry to confirm pom.xml exists
-                sh 'ls -l'
-                sh 'ls -l ServiceRegistry || echo "ServiceRegistry folder not found!"'
-                sh 'ls -l ServiceRegistry/pom.xml || echo "pom.xml missing in ServiceRegistry!"'
-            }
-        }
-
-        stage('Print Java and Maven Versions') {
-            steps {
-                sh 'java -version'
-                sh 'mvn -v'
             }
         }
 
@@ -79,7 +62,7 @@ pipeline {
 
                 stage('Build SERVICE-REGISTRY') {
                     steps {
-                        dir('ServiceRegistry') {
+                        dir('serviceregistry') {  // fixed folder name here
                             sh 'mvn clean install'
                         }
                     }
