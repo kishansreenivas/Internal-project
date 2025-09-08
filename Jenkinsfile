@@ -7,8 +7,8 @@ pipeline {
     }
 
     options {
+        ansiColor('xterm')
         timestamps()
-        // Removed ansiColor('xterm') — it's not valid here unless plugin fully supports it
     }
 
     stages {
@@ -23,9 +23,7 @@ pipeline {
                 stage('Build USER-SERVICE') {
                     steps {
                         dir('userservice') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -33,9 +31,7 @@ pipeline {
                 stage('Build MOVIE-SERVICE') {
                     steps {
                         dir('movieservice') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -43,9 +39,7 @@ pipeline {
                 stage('Build BOOKING-SERVICE') {
                     steps {
                         dir('bookingservice') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -53,9 +47,7 @@ pipeline {
                 stage('Build PAYMENT-SERVICE') {
                     steps {
                         dir('paymentservice') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -63,9 +55,7 @@ pipeline {
                 stage('Build NOTIFICATION-SERVICE') {
                     steps {
                         dir('notificationservice') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -73,9 +63,7 @@ pipeline {
                 stage('Build SERVICE-REGISTRY') {
                     steps {
                         dir('ServiceRegistry') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -83,9 +71,7 @@ pipeline {
                 stage('Build API-GATEWAY') {
                     steps {
                         dir('apigateway') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
@@ -93,9 +79,7 @@ pipeline {
                 stage('Build CONFIG-SERVICE') {
                     steps {
                         dir('configservice') {
-                            wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                                sh 'mvn clean install'
-                            }
+                            sh 'mvn clean install'
                         }
                     }
                 }
