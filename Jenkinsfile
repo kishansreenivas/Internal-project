@@ -6,6 +6,11 @@ pipeline {
         maven 'Maven 3.9.11'
     }
 
+    options {
+        timestamps()
+        ansiColor('xterm')
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -18,7 +23,7 @@ pipeline {
                 stage('Build USER-SERVICE') {
                     steps {
                         dir('userservice') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
@@ -26,7 +31,7 @@ pipeline {
                 stage('Build MOVIE-SERVICE') {
                     steps {
                         dir('movieservice') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
@@ -34,7 +39,7 @@ pipeline {
                 stage('Build BOOKING-SERVICE') {
                     steps {
                         dir('bookingservice') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
@@ -42,7 +47,7 @@ pipeline {
                 stage('Build PAYMENT-SERVICE') {
                     steps {
                         dir('paymentservice') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
@@ -50,7 +55,7 @@ pipeline {
                 stage('Build NOTIFICATION-SERVICE') {
                     steps {
                         dir('notificationservice') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
@@ -58,7 +63,7 @@ pipeline {
                 stage('Build SERVICE-REGISTRY') {
                     steps {
                         dir('ServiceRegistry') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
@@ -66,7 +71,7 @@ pipeline {
                 stage('Build API-GATEWAY') {
                     steps {
                         dir('apigateway') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
@@ -74,7 +79,7 @@ pipeline {
                 stage('Build CONFIG-SERVICE') {
                     steps {
                         dir('configservice') {
-                            sh 'mvn clean install'
+                            sh 'mvn clean verify'
                         }
                     }
                 }
