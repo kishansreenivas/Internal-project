@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git url: 'git@github.com:Sumeet-khandale/Internal-project.git'
+                  git'https://github.com/kishansreenivas/Internal-project.git
             }
         }
 
